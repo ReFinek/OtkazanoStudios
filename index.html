@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наша Компания</title>
+    <title>Otkazano Studios</title>
     <style>
-        * {Р
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -45,7 +45,6 @@
         .line-2 { top: 65%; right: -150px; width: 400px; height: 1px; animation-delay: 8s; animation-direction: reverse; }
         .line-3 { bottom: 25%; left: -200px; width: 250px; height: 1px; animation-delay: 15s; }
         
-        /* Новые анимированные элементы фона */
         .floating-particle {
             position: absolute;
             background: rgba(255, 255, 255, 0.05);
@@ -151,12 +150,13 @@
             color: #fff;
         }
 
-        /* Лого - уменьшен размер и изменены пропорции */
+        /* Лого - повыше и с вращающейся частью 35% */
         .logo-container {
             position: relative;
             display: inline-block;
-            width: 300px; /* уменьшено с 450px */
-            height: 300px; /* уменьшено с 450px */
+            width: 280px;
+            height: 280px;
+            margin-top: 20px; /* Поднял лого выше */
             filter: drop-shadow(0 0 20px rgba(255,255,255,0.2))
                     drop-shadow(0 0 40px rgba(255,255,255,0.1));
         }
@@ -166,7 +166,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%; /* теперь 100% от контейнера */
+            width: 100%;
             height: 100%;
             z-index: 1;
             opacity: 0.95;
@@ -183,8 +183,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 35%; /* уменьшено с 75% */
-            height: 35%; /* уменьшено с 75% */
+            width: 35%; /* Уменьшено до 35% */
+            height: 35%;
             z-index: 2;
             animation: rotate-slow 80s linear infinite;
         }
@@ -202,22 +202,120 @@
 
         header {
             text-align: center;
-            padding: 40px 0 20px; /* уменьшено */
+            padding: 20px 0 10px; /* Уменьшил нижний отступ */
         }
 
-        .welcome-text {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #888;
-            margin: 30px auto; /* уменьшено */
-            max-width: 800px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+        /* Секции контента */
+        .section {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+        }
+
+        .section-content {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #bbb;
+            text-align: center;
+        }
+
+        /* Интерактивные элементы */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .team-member {
+            background: rgba(30, 30, 30, 0.6);
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            border-color: #555;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .game-card {
+            background: rgba(25, 25, 25, 0.7);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            border-color: #666;
+            transform: scale(1.02);
+        }
+
+        .interactive-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+            border: 1px solid #444;
+            color: #ddd;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            margin: 10px;
+        }
+
+        .interactive-btn:hover {
+            background: linear-gradient(145deg, #353535, #2a2a2a);
+            color: #fff;
+            border-color: #666;
         }
 
         @media (max-width: 768px) {
             .logo-container {
-                width: 200px; /* уменьшено для мобильных */
-                height: 200px;
+                width: 220px;
+                height: 220px;
+            }
+            
+            .section-title {
+                font-size: 1.8em;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -235,7 +333,7 @@
 
     <nav>
         <div class="nav-container">
-            <button class="nav-button">наши соцсети</button> <!-- изменено -->
+            <button class="nav-button">наши соцсети</button>
             <div style="position: relative;">
                 <button class="nav-button" id="projects-btn">Наши проекты</button>
                 <div class="dropdown" id="projects-dropdown">
@@ -244,7 +342,7 @@
                     </a>
                 </div>
             </div>
-            <button class="nav-button">(хз что написать)</button>
+            <button class="nav-button">Карьера</button>
         </div>
     </nav>
 
@@ -260,12 +358,90 @@
     </header>
 
     <main>
-        <div class="welcome-text">
-            Добро пожаловать на наш сайт. Здесь скоро появится больше информации...
-        </div>
+        <!-- Секция "О студии" -->
+        <section id="about" class="section">
+            <h2 class="section-title">Немного о Otkazano Studios</h2>
+            <div class="section-content">
+                <p>Мы - молодая, амбициозная студия разработки игр, создающая уникальные игровые миры. 
+                Наша философия: качество превыше количества, креативность выше шаблонов.</p>
+                
+                <div style="margin-top: 30px;">
+                    <button class="interactive-btn" onclick="showPhilosophy()">Наша философия</button>
+                    <button class="interactive-btn" onclick="showValues()">Наши ценности</button>
+                </div>
+                
+                <div id="philosophy-text" style="display: none; margin-top: 20px; padding: 20px; background: rgba(40,40,40,0.5); border-radius: 8px;">
+                    <h3>Наша философия разработки</h3>
+                    <p>Мы верим, что каждая игра должна рассказывать историю и вызывать эмоции. 
+                    Наш подход сочетает техническое мастерство с художественным видением.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция "Наша команда" -->
+        <section id="team" class="section">
+            <h2 class="section-title">Наша команда</h2>
+            <div class="team-grid">
+                <div class="team-member" onclick="showMemberInfo('lead')">
+                    <h3>Геймдизайнер</h3>
+                    <p>Создаем игровые механики и проектируем игровой опыт</p>
+                </div>
+                <div class="team-member" onclick="showMemberInfo('dev')">
+                    <h3>Разработчики</h3>
+                    <p>Превращаем идеи в код и создаем технологии</p>
+                </div>
+                <div class="team-member" onclick="showMemberInfo('art')">
+                    <h3>Художники</h3>
+                    <p>Создаем визуальные миры и персонажей</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция "Наши проекты" -->
+        <section id="projects" class="section">
+            <h2 class="section-title">Наши проекты</h2>
+            <div class="section-content">
+                <div class="game-card" onclick="openProject('bendy')">
+                    <h3>Bendy: Down To The Inks</h3>
+                    <p>Исследуйте таинственный мир анимационной студии...</p>
+                </div>
+                <div class="game-card" onclick="showComingSoon()">
+                    <h3>Секретный проект</h3>
+                    <p>Скоро мы расскажем больше...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция "Карьера" -->
+        <section id="career" class="section">
+            <h2 class="section-title">Присоединяйтесь к нам</h2>
+            <div class="section-content">
+                <p>Мы всегда в поиске талантливых людей. Отправьте своё портфолио!</p>
+                <button class="interactive-btn" onclick="showVacancies()">Открытые вакансии</button>
+            </div>
+        </section>
     </main>
 
     <script>
+        // Анимация появления секций при скролле
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Выпадающее меню проектов
         document.addEventListener('DOMContentLoaded', () => {
             const projectsBtn = document.getElementById('projects-btn');
             const dropdown = document.getElementById('projects-dropdown');
@@ -281,6 +457,39 @@
                 }
             });
         });
+
+        // Интерактивные функции
+        function showPhilosophy() {
+            const el = document.getElementById('philosophy-text');
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showValues() {
+            alert('Наши ценности: Инновации, Качество, Сообщество, Страсть к играм!');
+        }
+
+        function showMemberInfo(role) {
+            const messages = {
+                lead: 'Наш геймдизайнер имеет 5+ лет опыта в индустрии...',
+                dev: 'Команда разработки специализируется на Unity и Unreal Engine...',
+                art: 'Художники создают уникальный стиль для каждой нашей игры...'
+            };
+            alert(messages[role]);
+        }
+
+        function openProject(project) {
+            if (project === 'bendy') {
+                window.open('https://refinek.github.io/DownToTheInksSite/', '_blank');
+            }
+        }
+
+        function showComingSoon() {
+            alert('Новый проект находится в разработке! Следите за обновлениями.');
+        }
+
+        function showVacancies() {
+            alert('Отправьте своё портфолио на email: careers@otkazano.ru');
+        }
     </script>
 </body>
 </html>
