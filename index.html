@@ -1389,29 +1389,32 @@
                     .from('users')
                     .select('username')
                     .eq('username', username)
-                    .single();
+                    .maybeSingle(); // Используем maybeSingle вместо single
         
                 if (existingUser) return false;
         
                 // Создаем пользователя
                 const { error } = await supabase
                     .from('users')
-                    .insert([{
+                    .insert({
                         username: username,
                         password: password,
                         email: email || '',
                         avatar: avatar,
                         is_admin: adminUsers.includes(username),
                         created_at: new Date().toISOString()
-                    }]);
+                    })
+                    .select(); // Добавляем .select() для возврата данных
         
                 if (error) {
+                    console.error('❌ Ошибка вставки:', error);
                     if (error.code === '42P01') {
                         console.error('❌ Таблица users не существует в Supabase');
                         showErrorNotification('Ошибка базы данных. Таблица не найдена.');
                         return false;
                     }
-                    throw error;
+                    showErrorNotification('Ошибка регистрации: ' + error.message);
+                    return false;
                 }
         
                 localStorage.setItem('otkazano_current_user', username);
@@ -1432,94 +1435,52 @@
             }
             
             try {
+                console.log(`🔐 Попытка входа: ${username}`);
+                
                 const { data: user, error } = await supabase
                     .from('users')
                     .select('*')
                     .eq('username', username)
-                    .single();
+                    .maybeSingle(); // Используем maybeSingle вместо single
         
                 if (error) {
+                    console.error('❌ Ошибка запроса:', error);
                     if (error.code === 'PGRST116') {
-                        // Пользователь не найден
+                        // Пользователь не найден - это нормально
+                        console.log('👤 Пользователь не найден');
                         return false;
                     }
-                    throw error;
+                    showErrorNotification('Ошибка базы данных: ' + error.message);
+                    return false;
                 }
         
-                if (!user) return false;
-                if (user.password !== password) return false;
+                if (!user) {
+                    console.log('👤 Пользователь не существует');
+                    return false;
+                }
         
+                console.log('🔑 Проверка пароля...');
+                if (user.password !== password) {
+                    console.log('❌ Неверный пароль');
+                    return false;
+                }
+        
+                console.log('✅ Вход успешен!');
                 localStorage.setItem('otkazano_current_user', username);
                 currentUser = username;
                 return true;
             } catch (error) {
-                console.error('Ошибка входа:', error);
+                console.error('❌ Ошибка входа:', error);
                 showErrorNotification('Ошибка входа. Попробуйте позже.');
                 return false;
             }
         }
         
-        async function changePassword(username, oldPassword, newPassword) {
-            if (!supabase) {
-                console.error('❌ Supabase не доступен');
-                return false;
-            }
-            
-            try {
-                // Сначала проверяем старый пароль
-                const { data: user, error: checkError } = await supabase
-                    .from('users')
-                    .select('password')
-                    .eq('username', username)
-                    .single();
-        
-                if (checkError || !user || user.password !== oldPassword) {
-                    return false;
-                }
-        
-                // Обновляем пароль
-                const { error } = await supabase
-                    .from('users')
-                    .update({ password: newPassword })
-                    .eq('username', username);
-        
-                if (error) throw error;
-                return true;
-            } catch (error) {
-                console.error('Ошибка смены пароля:', error);
-                return false;
-            }
-        }
-        
-        async function updateUserAvatar(avatarDataUrl) {
-            if (!supabase) {
-                console.error('❌ Supabase не доступен');
-                return;
-            }
-            
-            try {
-                const { error } = await supabase
-                    .from('users')
-                    .update({ avatar: avatarDataUrl })
-                    .eq('username', currentUser);
-        
-                if (error) throw error;
-                updateAuthUI();
-            } catch (error) {
-                console.error('Ошибка обновления аватарки:', error);
-            }
-        }
-        
-        function logoutUser() {
-            localStorage.removeItem('otkazano_current_user');
-            currentUser = null;
-            updateAuthUI();
-        }
-        
         async function checkAuthStatus() {
             currentUser = localStorage.getItem('otkazano_current_user');
             if (currentUser) {
-                // Проверяем, существует ли пользователь в базе
+                console.log(`🔍 Проверка авторизации для: ${currentUser}`);
+                
                 try {
                     if (!supabase) {
                         console.warn('⚠️ Supabase не доступен, используем локальные данные');
@@ -1531,15 +1492,28 @@
                         .from('users')
                         .select('username')
                         .eq('username', currentUser)
-                        .single();
+                        .maybeSingle();
         
-                    if (error || !user) {
+                    if (error) {
+                        console.error('❌ Ошибка проверки пользователя:', error);
+                        if (error.code === 'PGRST116') {
+                            // Пользователь удален из базы
+                            console.log('👤 Пользователь удален из базы');
+                            logoutUser();
+                            return;
+                        }
+                    }
+        
+                    if (!user) {
                         // Пользователь удален из базы
+                        console.log('👤 Пользователь не найден в базе');
                         logoutUser();
                         return;
                     }
+                    
+                    console.log('✅ Пользователь подтвержден в базе');
                 } catch (error) {
-                    console.error('Ошибка проверки пользователя:', error);
+                    console.error('❌ Ошибка проверки пользователя:', error);
                 }
             }
             updateAuthUI();
