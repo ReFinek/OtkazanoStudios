@@ -1138,8 +1138,219 @@
             }
         }
         
-        // Остальные функции (setupEventListeners, registerUser, loginUser и т.д.) остаются такими же как в предыдущем коде
-        // ... [вставь сюда остальные функции из предыдущего кода]
+        function setupEventListeners() {
+            console.log('🔧 Настройка обработчиков событий...');
+            
+            // Обработчик для выпадающего меню проектов
+            if (projectsBtn && dropdown) {
+                projectsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                });
+        
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            } else {
+                console.warn('⚠️ Элементы навигации не найдены');
+            }
+            
+            // Обработчики для панелей команды
+            if (teamMembers && teamMembers.length > 0) {
+                teamMembers.forEach(member => {
+                    member.addEventListener('click', () => {
+                        teamMembers.forEach(otherMember => {
+                            if (otherMember !== member) {
+                                otherMember.classList.remove('active');
+                            }
+                        });
+                        member.classList.toggle('active');
+                    });
+                });
+            }
+        
+            // Модальные окна
+            if (loginBtn && loginModal) {
+                loginBtn.addEventListener('click', () => {
+                    loginModal.classList.add('show');
+                });
+            }
+        
+            [loginClose, registerClose, settingsClose].forEach(closeBtn => {
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        if (loginModal) loginModal.classList.remove('show');
+                        if (registerModal) registerModal.classList.remove('show');
+                        if (settingsModal) settingsModal.classList.remove('show');
+                        clearErrors();
+                    });
+                }
+            });
+        
+            [loginModal, registerModal, settingsModal].forEach(modal => {
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.classList.remove('show');
+                            clearErrors();
+                        }
+                    });
+                }
+            });
+        
+            if (toRegisterLink && loginModal && registerModal) {
+                toRegisterLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    loginModal.classList.remove('show');
+                    registerModal.classList.add('show');
+                    clearErrors();
+                });
+            }
+        
+            if (toLoginLink && registerModal && loginModal) {
+                toLoginLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    registerModal.classList.remove('show');
+                    loginModal.classList.add('show');
+                    clearErrors();
+                });
+            }
+        
+            // Форма входа
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('login-username').value;
+                    const password = document.getElementById('login-password').value;
+                    
+                    if (await loginUser(username, password)) {
+                        loginModal.classList.remove('show');
+                        loginForm.reset();
+                        clearErrors();
+                        updateAuthUI();
+                    } else {
+                        showError(loginError, 'Неверный логин или пароль');
+                    }
+                });
+            }
+        
+            // Форма регистрации
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('register-email').value;
+                    const username = document.getElementById('register-username').value;
+                    const password = document.getElementById('register-password').value;
+                    const passwordConfirm = document.getElementById('register-password-confirm').value;
+                    
+                    if (password !== passwordConfirm) {
+                        showError(registerError, 'Пароли не совпадают');
+                        return;
+                    }
+                    
+                    if (username.length < 3) {
+                        showError(registerError, 'Логин должен содержать минимум 3 символа');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        showError(registerError, 'Пароль должен содержать минимум 6 символов');
+                        return;
+                    }
+                    
+                    if (await registerUser(username, password, email, avatarDataUrl)) {
+                        registerModal.classList.remove('show');
+                        registerForm.reset();
+                        clearErrors();
+                        avatarDataUrl = null;
+                        if (avatarPreview) {
+                            avatarPreview.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">Превью</div>';
+                        }
+                        updateAuthUI();
+                        alert(`Добро пожаловать, ${username}!`);
+                    } else {
+                        showError(registerError, 'Пользователь с таким логином уже существует');
+                    }
+                });
+            }
+        
+            // Форма смены пароля
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const oldPassword = document.getElementById('old-password').value;
+                    const newPassword = document.getElementById('new-password').value;
+                    const newPasswordConfirm = document.getElementById('new-password-confirm').value;
+                    
+                    if (newPassword !== newPasswordConfirm) {
+                        showError(passwordError, 'Новые пароли не совпадают');
+                        return;
+                    }
+                    
+                    if (newPassword.length < 6) {
+                        showError(passwordError, 'Новый пароль должен содержать минимум 6 символов');
+                        return;
+                    }
+                    
+                    if (await changePassword(currentUser, oldPassword, newPassword)) {
+                        showSuccess(passwordSuccess, 'Пароль успешно изменен!');
+                        passwordForm.reset();
+                        setTimeout(() => {
+                            if (passwordSuccess) passwordSuccess.classList.remove('show');
+                        }, 3000);
+                    } else {
+                        showError(passwordError, 'Старый пароль неверен');
+                    }
+                });
+            }
+        
+            // Выход из аккаунта
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (confirm('Вы уверены, что хотите выйти?')) {
+                        logoutUser();
+                        if (settingsModal) settingsModal.classList.remove('show');
+                    }
+                });
+            }
+        
+            // Кнопка скролла вверх
+            window.addEventListener('scroll', () => {
+                if (scrollToTop) {
+                    if (window.pageYOffset > 300) {
+                        scrollToTop.classList.add('show');
+                    } else {
+                        scrollToTop.classList.remove('show');
+                    }
+                }
+            });
+        
+            if (scrollToTop) {
+                scrollToTop.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        
+            // Загрузка аватарок
+            if (avatarUpload) {
+                avatarUpload.addEventListener('change', (e) => {
+                    handleAvatarUpload(e, avatarPreview);
+                });
+            }
+        
+            if (settingsAvatarUpload && settingsAvatarPreview) {
+                settingsAvatarUpload.addEventListener('change', (e) => {
+                    handleAvatarUpload(e, settingsAvatarPreview, true);
+                });
+            }
+            
+            console.log('✅ Все обработчики настроены!');
+        }
         
         // Показываем уведомление об ошибке
         function showErrorNotification(message) {
@@ -1248,39 +1459,37 @@
             }
         }
         
-        // ... остальные функции остаются такими же
-                
-                async function changePassword(username, oldPassword, newPassword) {
-                    if (!supabase) {
-                        console.error('❌ Supabase не доступен');
-                        return false;
-                    }
-                    
-                    try {
-                        // Сначала проверяем старый пароль
-                        const { data: user, error: checkError } = await supabase
-                            .from('users')
-                            .select('password')
-                            .eq('username', username)
-                            .single();
-                
-                        if (checkError || !user || user.password !== oldPassword) {
-                            return false;
-                        }
-                
-                        // Обновляем пароль
-                        const { error } = await supabase
-                            .from('users')
-                            .update({ password: newPassword })
-                            .eq('username', username);
-                
-                        if (error) throw error;
-                        return true;
-                    } catch (error) {
-                        console.error('Ошибка смены пароля:', error);
-                        return false;
-                    }
+        async function changePassword(username, oldPassword, newPassword) {
+            if (!supabase) {
+                console.error('❌ Supabase не доступен');
+                return false;
+            }
+            
+            try {
+                // Сначала проверяем старый пароль
+                const { data: user, error: checkError } = await supabase
+                    .from('users')
+                    .select('password')
+                    .eq('username', username)
+                    .single();
+        
+                if (checkError || !user || user.password !== oldPassword) {
+                    return false;
                 }
+        
+                // Обновляем пароль
+                const { error } = await supabase
+                    .from('users')
+                    .update({ password: newPassword })
+                    .eq('username', username);
+        
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Ошибка смены пароля:', error);
+                return false;
+            }
+        }
         
         async function updateUserAvatar(avatarDataUrl) {
             if (!supabase) {
