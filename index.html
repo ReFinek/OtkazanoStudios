@@ -12,15 +12,14 @@
         }
 
         body {
-            background-color: #0a0a0a;
+            background-color: #080808;
             color: #e0e0e0;
             font-family: 'Arial', sans-serif;
             min-height: 100vh;
-            position: relative;
             overflow-x: hidden;
         }
 
-        /* Векторная анимация фона */
+        /* Элегантная векторная анимация фона */
         .vector-bg {
             position: fixed;
             top: 0;
@@ -30,99 +29,30 @@
             pointer-events: none;
             z-index: -2;
             opacity: 0.1;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 60%);
         }
 
         .vector-line {
             position: absolute;
             background: linear-gradient(90deg, transparent, #ffffff, transparent);
-            animation: float 20s linear infinite;
+            animation: float 25s linear infinite;
         }
 
-        .line-1 {
-            top: 20%;
-            left: -100px;
-            width: 300px;
-            height: 1px;
-            animation-delay: 0s;
-            animation-duration: 25s;
-        }
-
-        .line-2 {
-            top: 60%;
-            right: -100px;
-            width: 400px;
-            height: 1px;
-            animation-delay: 5s;
-            animation-duration: 30s;
-            animation-direction: reverse;
-        }
-
-        .line-3 {
-            bottom: 30%;
-            left: -150px;
-            width: 250px;
-            height: 1px;
-            animation-delay: 10s;
-            animation-duration: 20s;
-        }
-
-        .vector-dot {
-            position: absolute;
-            background: #ffffff;
-            border-radius: 50%;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        .dot-1 {
-            top: 15%;
-            right: 15%;
-            width: 3px;
-            height: 3px;
-            animation-delay: 0s;
-        }
-
-        .dot-2 {
-            bottom: 25%;
-            left: 10%;
-            width: 2px;
-            height: 2px;
-            animation-delay: 2s;
-        }
-
-        .dot-3 {
-            top: 40%;
-            left: 20%;
-            width: 4px;
-            height: 4px;
-            animation-delay: 1s;
-        }
+        .line-1 { top: 20%; left: -150px; width: 300px; height: 1px; animation-delay: 0s; }
+        .line-2 { top: 60%; right: -150px; width: 400px; height: 1px; animation-delay: 5s; animation-direction: reverse; }
+        .line-3 { bottom: 30%; left: -200px; width: 250px; height: 1px; animation-delay: 10s; }
 
         @keyframes float {
-            0% {
-                transform: translateX(-100px) rotate(0deg);
-            }
-            100% {
-                transform: translateX(calc(100vw + 100px)) rotate(360deg);
-            }
+            0% { transform: translateX(-150px) rotate(0deg); }
+            100% { transform: translateX(calc(100vw + 150px)) rotate(360deg); }
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.8;
-                transform: scale(1.5);
-            }
-        }
-
-        /* Навигационная панель */
+        /* Навигация */
         nav {
-            background: linear-gradient(135deg, #151515 0%, #1a1a1a 100%);
+            background: linear-gradient(135deg, #111, #1a1a1a);
             padding: 15px 0;
             border-bottom: 1px solid #222;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
             position: relative;
             z-index: 10;
         }
@@ -134,69 +64,89 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            padding: 0 20px;
         }
 
         .nav-button {
-            background: linear-gradient(145deg, #1a1a1a, #151515);
+            background: linear-gradient(145deg, #1a1a1a, #141414);
             border: 1px solid #2a2a2a;
             color: #bbb;
             padding: 12px 24px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
             letter-spacing: 1px;
+            text-transform: uppercase;
             position: relative;
             overflow: hidden;
         }
 
-        .nav-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: left 0.5s ease;
-        }
-
         .nav-button:hover {
-            background: linear-gradient(145deg, #252525, #1a1a1a);
-            border-color: #3a3a3a;
+            background: linear-gradient(145deg, #252525, #181818);
+            border-color: #444;
             color: #fff;
+            box-shadow: 0 4px 18px rgba(255,255,255,0.05);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
         }
 
-        .nav-button:hover::before {
-            left: 100%;
+        /* Выпадающее меню */
+        .dropdown {
+            position: absolute;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid #333;
+            border-radius: 8px;
+            top: 60px;
+            padding: 8px 0;
+            min-width: 220px;
+            text-align: center;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
-        /* Контейнер для лого */
+        .dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            color: #ccc;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-family: 'Verdana', sans-serif;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .dropdown-item:hover {
+            background: #222;
+            color: #fff;
+        }
+
+        /* Лого */
         .logo-container {
             position: relative;
             display: inline-block;
-            width: 300px; /* Увеличен размер контейнера */
-            height: 300px;
-            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.3)) 
-                    drop-shadow(0 0 60px rgba(255, 255, 255, 0.2))
-                    drop-shadow(0 0 100px rgba(255, 255, 255, 0.1));
+            width: 450px; /* увеличено */
+            height: 450px;
+            filter: drop-shadow(0 0 40px rgba(255,255,255,0.25))
+                    drop-shadow(0 0 80px rgba(255,255,255,0.15));
         }
 
-        /* Статичная часть лого - УВЕЛИЧЕНА */
         .logo-static {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px; /* Увеличена в 3 раза */
-            height: 300px;
+            width: 450px; /* ×3 */
+            height: 450px;
             z-index: 1;
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         .logo-static img {
@@ -205,16 +155,15 @@
             object-fit: contain;
         }
 
-        /* Вращающаяся часть лого */
         .logo-rotating {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70%;
-            height: 70%;
+            width: 75%;
+            height: 75%;
             z-index: 2;
-            animation: rotate-slow 72s linear infinite;
+            animation: rotate-slow 80s linear infinite;
         }
 
         .logo-rotating img {
@@ -223,130 +172,88 @@
             object-fit: contain;
         }
 
-        /* Анимация вращения */
         @keyframes rotate-slow {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            to {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* Хедер */
         header {
-            padding: 40px 0 30px 0;
             text-align: center;
-            position: relative;
-        }
-
-        /* Основной контент */
-        .content {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            text-align: center;
+            padding: 60px 0 30px;
         }
 
         .welcome-text {
             font-size: 18px;
             line-height: 1.6;
             color: #888;
-            margin-bottom: 30px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            margin: 40px auto;
+            max-width: 800px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.7);
         }
 
-        /* Адаптивность */
         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 12px;
-            }
-
-            .nav-button {
-                width: 220px;
-                padding: 14px 24px;
-            }
-
             .logo-container {
-                width: 200px;
-                height: 200px;
+                width: 300px;
+                height: 300px;
             }
-
-            .vector-bg {
-                opacity: 0.05;
-            }
+            .logo-static { width: 300px; height: 300px; }
         }
     </style>
 </head>
 <body>
-    <!-- Векторная анимация фона -->
     <div class="vector-bg">
         <div class="vector-line line-1"></div>
         <div class="vector-line line-2"></div>
         <div class="vector-line line-3"></div>
-        <div class="vector-dot dot-1"></div>
-        <div class="vector-dot dot-2"></div>
-        <div class="vector-dot dot-3"></div>
     </div>
 
-    <!-- Навигационная панель -->
     <nav>
         <div class="nav-container">
             <button class="nav-button">О нас</button>
-            <button class="nav-button">Наши проекты</button>
+            <div style="position: relative;">
+                <button class="nav-button" id="projects-btn">Наши проекты</button>
+                <div class="dropdown" id="projects-dropdown">
+                    <a href="https://refinek.github.io/DownToTheInksSite/" class="dropdown-item" target="_blank">
+                        Bendy: Down To The Inks
+                    </a>
+                </div>
+            </div>
             <button class="nav-button">(хз что написать)</button>
         </div>
     </nav>
 
-    <!-- Хедер с лого -->
     <header>
         <div class="logo-container">
-            <!-- Статичная часть (увеличенная) -->
             <div class="logo-static">
                 <img src="logopartstatic.png" alt="Статичная часть лого">
             </div>
-            <!-- Вращающаяся часть -->
             <div class="logo-rotating">
                 <img src="logopartrotation.png" alt="Вращающаяся часть лого">
             </div>
         </div>
     </header>
 
-    <!-- Основной контент -->
-    <main class="content">
+    <main>
         <div class="welcome-text">
             Добро пожаловать на наш сайт. Здесь скоро появится больше информации...
         </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.nav-button');
-            
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.style.background = 'linear-gradient(145deg, #2a2a2a, #1f1f1f)';
-                    setTimeout(() => {
-                        this.style.background = '';
-                    }, 200);
-                });
+        document.addEventListener('DOMContentLoaded', () => {
+            const projectsBtn = document.getElementById('projects-btn');
+            const dropdown = document.getElementById('projects-dropdown');
+
+            projectsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('show');
             });
 
-            // Динамическое создание дополнительных векторных элементов
-            const vectorBg = document.querySelector('.vector-bg');
-            for (let i = 0; i < 5; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'vector-dot';
-                dot.style.left = Math.random() * 100 + '%';
-                dot.style.top = Math.random() * 100 + '%';
-                dot.style.width = (Math.random() * 3 + 1) + 'px';
-                dot.style.height = dot.style.width;
-                dot.style.animationDelay = (Math.random() * 5) + 's';
-                dot.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                vectorBg.appendChild(dot);
-            }
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
+                    dropdown.classList.remove('show');
+                }
+            });
         });
     </script>
 </body>
