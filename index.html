@@ -111,18 +111,22 @@
             border-color: #5a3a3a;
         }
 
-        /* Профиль пользователя */
+        .user-container {
+            display: flex;
+            align-items: center;
+            margin-left: 40px;
+        }
+        
         .user-profile {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-left: 40px;
             cursor: pointer;
             padding: 5px 10px;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-
+        
         .user-profile:hover {
             background: rgba(255,255,255,0.05);
         }
@@ -158,9 +162,10 @@
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-left: 10px;
+            margin-left: 15px;
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
             animation: glow 2s ease-in-out infinite alternate;
+            white-space: nowrap;
         }
 
         @keyframes glow {
@@ -763,18 +768,23 @@
             .login-button {
                 margin-left: 20px;
             }
-
-            .user-profile {
+    
+            .user-container {
                 margin-left: 20px;
             }
-
+            
+            .user-profile {
+                margin-left: 0;
+            }
+            
             .username {
                 display: none;
             }
-
+        
             .admin-badge {
                 font-size: 10px;
                 padding: 6px 12px;
+                margin-left: 10px;
             }
         }
     </style>
@@ -1220,7 +1230,7 @@
                 if (file.size > 2 * 1024 * 1024) {
                     alert('Размер файла не должен превышать 2MB');
                     return;
-                }
+                }р
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1354,16 +1364,18 @@
                     }
                     
                     authSection.innerHTML = `
-                        <div class="user-profile" id="user-profile">
-                            <div class="user-avatar">
-                                ${userData.avatar ? 
-                                    `<img src="${userData.avatar}" alt="${currentUser}">` : 
-                                    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>`
-                                }
+                        <div class="user-container">
+                            <div class="user-profile" id="user-profile">
+                                <div class="user-avatar">
+                                    ${userData.avatar ? 
+                                        `<img src="${userData.avatar}" alt="${currentUser}">` : 
+                                        `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>`
+                                    }
+                                </div>
+                                <div class="username">${currentUser}</div>
                             </div>
-                            <div class="username">${currentUser}</div>
+                            ${adminBadge}
                         </div>
-                        ${adminBadge}
                     `;
                     
                     // Обновляем превью в настройках
