@@ -111,6 +111,36 @@
             border-color: #5a3a3a;
         }
 
+        /* Профиль пользователя */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 40px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            overflow: hidden;
+            background: #333;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .username {
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
         /* Выпадающее меню */
         .dropdown {
             position: absolute;
@@ -150,7 +180,7 @@
             color: #fff;
         }
 
-        /* Модальное окно входа */
+        /* Модальные окна */
         .modal {
             position: fixed;
             top: 0;
@@ -212,6 +242,13 @@
             margin-bottom: 20px;
         }
 
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
         .form-input {
             width: 100%;
             padding: 12px 15px;
@@ -248,22 +285,68 @@
             transform: translateY(-2px);
         }
 
-        .register-link {
+        .form-link {
             text-align: center;
             margin-top: 20px;
             font-size: 14px;
             color: #888;
         }
 
-        .register-link a {
+        .form-link a {
             color: #aaa;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
-        .register-link a:hover {
+        .form-link a:hover {
             color: #fff;
             text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Выбор аватарки */
+        .avatar-selection {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #444;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.1);
+            border-color: #666;
+        }
+
+        .avatar-option.selected {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         /* Лого */
@@ -595,6 +678,14 @@
             .login-button {
                 margin-left: 20px;
             }
+
+            .user-profile {
+                margin-left: 20px;
+            }
+
+            .username {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -619,26 +710,62 @@
                 </div>
                 <button class="nav-button">Посты</button>
             </div>
-            <button class="nav-button login-button" id="login-btn">Вход</button>
+            <div id="auth-section">
+                <button class="nav-button login-button" id="login-btn">Вход</button>
+            </div>
         </div>
     </nav>
 
     <!-- Модальное окно входа -->
     <div class="modal" id="login-modal">
         <div class="modal-content">
-            <button class="modal-close" id="modal-close">&times;</button>
+            <button class="modal-close" id="login-close">&times;</button>
             <h2 class="modal-title">Вход в аккаунт</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Логин" required>
+                    <input type="text" class="form-input" placeholder="Логин" required id="login-username">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-input" placeholder="Пароль" required>
+                    <input type="password" class="form-input" placeholder="Пароль" required id="login-password">
                 </div>
+                <div class="error-message" id="login-error"></div>
                 <button type="submit" class="form-submit">Войти</button>
             </form>
-            <div class="register-link">
-                У вас нет аккаунта? <a href="#" id="register-link">Харегайте его!</a>
+            <div class="form-link">
+                У вас нет аккаунта? <a href="#" id="to-register-link">Зарегистрируйте его!</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="register-close">&times;</button>
+            <h2 class="modal-title">Регистрация</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label class="form-label">Выберите аватарку:</label>
+                    <div class="avatar-selection" id="avatar-selection">
+                        <!-- Аватарки будут добавлены через JavaScript -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-input" placeholder="Email (необязательно)" id="register-email">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Логин" required id="register-username">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Пароль" required id="register-password">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Повторите пароль" required id="register-password-confirm">
+                </div>
+                <div class="error-message" id="register-error"></div>
+                <button type="submit" class="form-submit">Зарегистрировать</button>
+            </form>
+            <div class="form-link">
+                Уже есть аккаунт? <a href="#" id="to-login-link">Войдите!</a>
             </div>
         </div>
     </div>
@@ -649,7 +776,7 @@
                 <img src="logopartstatic.png" alt="Статичная часть лого">
             </div>
             <div class="logo-rotating">
-                <img src="logopartrotation.png" alt="Вращающаяся часть лого">
+                <img src="ventilator.png" alt="Вращающаяся часть лого">
             </div>
         </div>
     </header>
@@ -721,15 +848,40 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Элементы DOM
             const projectsBtn = document.getElementById('projects-btn');
             const dropdown = document.getElementById('projects-dropdown');
             const loginBtn = document.getElementById('login-btn');
+            const authSection = document.getElementById('auth-section');
             const loginModal = document.getElementById('login-modal');
-            const modalClose = document.getElementById('modal-close');
+            const registerModal = document.getElementById('register-modal');
+            const loginClose = document.getElementById('login-close');
+            const registerClose = document.getElementById('register-close');
             const loginForm = document.getElementById('login-form');
-            const registerLink = document.getElementById('register-link');
+            const registerForm = document.getElementById('register-form');
+            const toRegisterLink = document.getElementById('to-register-link');
+            const toLoginLink = document.getElementById('to-login-link');
+            const loginError = document.getElementById('login-error');
+            const registerError = document.getElementById('register-error');
             const scrollToTop = document.getElementById('scroll-to-top');
-            
+            const avatarSelection = document.getElementById('avatar-selection');
+
+            // Предопределенные аватарки
+            const defaultAvatars = [
+                'default1.png',
+                'default2.png', 
+                'default3.png',
+                'default4.png',
+                'default5.png'
+            ];
+
+            let selectedAvatar = 'default1.png';
+            let currentUser = null;
+
+            // Инициализация
+            initAvatars();
+            checkAuthStatus();
+
             // Обработчик для выпадающего меню проектов
             projectsBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -747,48 +899,100 @@
             
             teamMembers.forEach(member => {
                 member.addEventListener('click', () => {
-                    // Закрываем все остальные панели
                     teamMembers.forEach(otherMember => {
                         if (otherMember !== member) {
                             otherMember.classList.remove('active');
                         }
                     });
-                    
-                    // Переключаем текущую панель
                     member.classList.toggle('active');
                 });
             });
 
-            // Модальное окно входа
+            // Модальные окна
             loginBtn.addEventListener('click', () => {
                 loginModal.classList.add('show');
             });
 
-            modalClose.addEventListener('click', () => {
+            loginClose.addEventListener('click', () => {
                 loginModal.classList.remove('show');
+                clearErrors();
             });
 
-            loginModal.addEventListener('click', (e) => {
-                if (e.target === loginModal) {
+            registerClose.addEventListener('click', () => {
+                registerModal.classList.remove('show');
+                clearErrors();
+            });
+
+            [loginModal, registerModal].forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('show');
+                        clearErrors();
+                    }
+                });
+            });
+
+            toRegisterLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.classList.remove('show');
+                registerModal.classList.add('show');
+                clearErrors();
+            });
+
+            toLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerModal.classList.remove('show');
+                loginModal.classList.add('show');
+                clearErrors();
+            });
+
+            // Форма входа
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('login-username').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (loginUser(username, password)) {
                     loginModal.classList.remove('show');
+                    loginForm.reset();
+                    clearErrors();
+                    updateAuthUI();
+                } else {
+                    showError(loginError, 'Неверный логин или пароль');
                 }
             });
 
-            registerLink.addEventListener('click', (e) => {
+            // Форма регистрации
+            registerForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                alert('Система регистрации будет добавлена в ближайшее время! Следите за обновлениями!');
-            });
-
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const login = e.target.querySelector('input[type="text"]').value;
-                const password = e.target.querySelector('input[type="password"]').value;
+                const email = document.getElementById('register-email').value;
+                const username = document.getElementById('register-username').value;
+                const password = document.getElementById('register-password').value;
+                const passwordConfirm = document.getElementById('register-password-confirm').value;
                 
-                // Простая имитация входа (в будущем можно подключить бэкенд)
-                if (login && password) {
-                    alert(`Добро пожаловать, ${login}! Система аккаунтов находится в разработке.`);
-                    loginModal.classList.remove('show');
-                    loginForm.reset();
+                if (password !== passwordConfirm) {
+                    showError(registerError, 'Пароли не совпадают');
+                    return;
+                }
+                
+                if (username.length < 3) {
+                    showError(registerError, 'Логин должен содержать минимум 3 символа');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError(registerError, 'Пароль должен содержать минимум 6 символов');
+                    return;
+                }
+                
+                if (registerUser(username, password, email, selectedAvatar)) {
+                    registerModal.classList.remove('show');
+                    registerForm.reset();
+                    clearErrors();
+                    updateAuthUI();
+                    alert(`Добро пожаловать, ${username}!`);
+                } else {
+                    showError(registerError, 'Пользователь с таким логином уже существует');
                 }
             });
 
@@ -808,16 +1012,119 @@
                 });
             });
 
-            // Сохранение данных в localStorage (базовая реализация системы аккаунтов)
-            function saveUserData(login, password) {
-                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                users[login] = { password: password, registered: new Date().toISOString() };
-                localStorage.setItem('otkazano_users', JSON.stringify(users));
+            // Функции
+            function initAvatars() {
+                defaultAvatars.forEach(avatar => {
+                    const avatarOption = document.createElement('div');
+                    avatarOption.className = 'avatar-option';
+                    if (avatar === selectedAvatar) {
+                        avatarOption.classList.add('selected');
+                    }
+                    
+                    const img = document.createElement('img');
+                    img.src = avatar;
+                    img.alt = 'Аватар';
+                    img.onerror = function() {
+                        this.parentElement.innerHTML = 'AV';
+                        this.parentElement.style.background = '#444';
+                        this.parentElement.style.display = 'flex';
+                        this.parentElement.style.alignItems = 'center';
+                        this.parentElement.style.justifyContent = 'center';
+                        this.parentElement.style.color = '#888';
+                    };
+                    
+                    avatarOption.appendChild(img);
+                    avatarOption.addEventListener('click', () => {
+                        document.querySelectorAll('.avatar-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        avatarOption.classList.add('selected');
+                        selectedAvatar = avatar;
+                    });
+                    
+                    avatarSelection.appendChild(avatarOption);
+                });
             }
 
-            function checkUserCredentials(login, password) {
+            function registerUser(username, password, email, avatar) {
                 const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                return users[login] && users[login].password === password;
+                
+                if (users[username]) {
+                    return false; // Пользователь уже существует
+                }
+                
+                users[username] = {
+                    password: password,
+                    email: email || '',
+                    avatar: avatar,
+                    registered: new Date().toISOString()
+                };
+                
+                localStorage.setItem('otkazano_users', JSON.stringify(users));
+                localStorage.setItem('otkazano_current_user', username);
+                currentUser = username;
+                return true;
+            }
+
+            function loginUser(username, password) {
+                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                
+                if (users[username] && users[username].password === password) {
+                    localStorage.setItem('otkazano_current_user', username);
+                    currentUser = username;
+                    return true;
+                }
+                
+                return false;
+            }
+
+            function logoutUser() {
+                localStorage.removeItem('otkazano_current_user');
+                currentUser = null;
+                updateAuthUI();
+            }
+
+            function checkAuthStatus() {
+                currentUser = localStorage.getItem('otkazano_current_user');
+                updateAuthUI();
+            }
+
+            function updateAuthUI() {
+                if (currentUser) {
+                    const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                    const userData = users[currentUser];
+                    
+                    authSection.innerHTML = `
+                        <div class="user-profile" id="user-profile">
+                            <div class="user-avatar">
+                                <img src="${userData.avatar}" alt="${currentUser}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div style="width:100%;height:100%;background:#444;display:none;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>
+                            </div>
+                            <div class="username">${currentUser}</div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('user-profile').addEventListener('click', () => {
+                        if (confirm('Вы хотите выйти?')) {
+                            logoutUser();
+                        }
+                    });
+                } else {
+                    authSection.innerHTML = '<button class="nav-button login-button" id="login-btn">Вход</button>';
+                    document.getElementById('login-btn').addEventListener('click', () => {
+                        loginModal.classList.add('show');
+                    });
+                }
+            }
+
+            function showError(element, message) {
+                element.textContent = message;
+                element.classList.add('show');
+            }
+
+            function clearErrors() {
+                loginError.classList.remove('show');
+                registerError.classList.remove('show');
             }
         });
     </script>
