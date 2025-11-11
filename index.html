@@ -20,35 +20,101 @@
             overflow-x: hidden;
         }
 
-        /* Декоративные элементы фона */
-        .bg-decoration {
+        /* Векторная анимация фона */
+        .vector-bg {
             position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
+            z-index: -2;
+            opacity: 0.1;
         }
 
-        .decoration-circle {
+        .vector-line {
             position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(20,20,20,0.1) 0%, transparent 70%);
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            animation: float 20s linear infinite;
         }
 
-        .circle-1 {
+        .line-1 {
+            top: 20%;
+            left: -100px;
             width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 5%;
-            background: radial-gradient(circle, rgba(30,30,30,0.15) 0%, transparent 70%);
+            height: 1px;
+            animation-delay: 0s;
+            animation-duration: 25s;
         }
 
-        .circle-2 {
-            width: 200px;
-            height: 200px;
-            bottom: 15%;
-            right: 8%;
-            background: radial-gradient(circle, rgba(40,40,40,0.1) 0%, transparent 70%);
+        .line-2 {
+            top: 60%;
+            right: -100px;
+            width: 400px;
+            height: 1px;
+            animation-delay: 5s;
+            animation-duration: 30s;
+            animation-direction: reverse;
+        }
+
+        .line-3 {
+            bottom: 30%;
+            left: -150px;
+            width: 250px;
+            height: 1px;
+            animation-delay: 10s;
+            animation-duration: 20s;
+        }
+
+        .vector-dot {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .dot-1 {
+            top: 15%;
+            right: 15%;
+            width: 3px;
+            height: 3px;
+            animation-delay: 0s;
+        }
+
+        .dot-2 {
+            bottom: 25%;
+            left: 10%;
+            width: 2px;
+            height: 2px;
+            animation-delay: 2s;
+        }
+
+        .dot-3 {
+            top: 40%;
+            left: 20%;
+            width: 4px;
+            height: 4px;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.5);
+            }
         }
 
         /* Навигационная панель */
@@ -110,33 +176,32 @@
             left: 100%;
         }
 
-        .nav-button:active {
-            transform: translateY(0);
-        }
-
-        /* Контейнер для лого с двумя слоями */
+        /* Контейнер для лого */
         .logo-container {
             position: relative;
             display: inline-block;
-            width: 600px; /* Размер контейнера */
-            height: 600px;
-            filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.4)) 
-                    drop-shadow(0 0 40px rgba(80, 80, 80, 0.2));
+            width: 300px; /* Увеличен размер контейнера */
+            height: 300px;
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.3)) 
+                    drop-shadow(0 0 60px rgba(255, 255, 255, 0.2))
+                    drop-shadow(0 0 100px rgba(255, 255, 255, 0.1));
         }
 
-        /* Статичная часть лого */
+        /* Статичная часть лого - УВЕЛИЧЕНА */
         .logo-static {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 200%;
-            height: 200%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300%; /* Увеличена в 3 раза */
+            height: 300%;
             z-index: 1;
+            opacity: 0.9;
         }
 
         .logo-static img {
-            width: 200%;
-            height: 200%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
 
@@ -146,10 +211,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70%; /* 4264/10368 ≈ 0.41, но сделаем чуть больше для видимости */
+            width: 70%;
             height: 70%;
             z-index: 2;
-            animation: rotate-slow 72s linear infinite; /* 1.2 минуты = 72 секунды */
+            animation: rotate-slow 72s linear infinite;
         }
 
         .logo-rotating img {
@@ -191,30 +256,6 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Дополнительные декоративные элементы */
-        .corner-decoration {
-            position: fixed;
-            width: 200px;
-            height: 200px;
-            border: 1px solid #1a1a1a;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .corner-tl {
-            top: 50px;
-            left: 50px;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .corner-br {
-            bottom: 50px;
-            right: 50px;
-            border-left: none;
-            border-top: none;
-        }
-
         /* Адаптивность */
         @media (max-width: 768px) {
             .nav-container {
@@ -229,26 +270,26 @@
             }
 
             .logo-container {
-                width: 150px;
-                height: 150px;
+                width: 200px;
+                height: 200px;
             }
 
-            .corner-decoration {
-                display: none;
+            .vector-bg {
+                opacity: 0.05;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Декоративные элементы фона -->
-    <div class="bg-decoration">
-        <div class="decoration-circle circle-1"></div>
-        <div class="decoration-circle circle-2"></div>
+    <!-- Векторная анимация фона -->
+    <div class="vector-bg">
+        <div class="vector-line line-1"></div>
+        <div class="vector-line line-2"></div>
+        <div class="vector-line line-3"></div>
+        <div class="vector-dot dot-1"></div>
+        <div class="vector-dot dot-2"></div>
+        <div class="vector-dot dot-3"></div>
     </div>
-
-    <!-- Угловые декоративные элементы -->
-    <div class="corner-decoration corner-tl"></div>
-    <div class="corner-decoration corner-br"></div>
 
     <!-- Навигационная панель -->
     <nav>
@@ -262,13 +303,13 @@
     <!-- Хедер с лого -->
     <header>
         <div class="logo-container">
-            <!-- Вращающаяся часть (задний план) -->
-            <div class="logo-rotating">
-                <img src="ventilator.png" alt="Вращающаяся часть лого">
-            </div>
-            <!-- Статичная часть (передний план) -->
+            <!-- Статичная часть (увеличенная) -->
             <div class="logo-static">
                 <img src="logopartstatic.png" alt="Статичная часть лого">
+            </div>
+            <!-- Вращающаяся часть -->
+            <div class="logo-rotating">
+                <img src="ventilator.png" alt="Вращающаяся часть лого">
             </div>
         </div>
     </header>
@@ -292,6 +333,20 @@
                     }, 200);
                 });
             });
+
+            // Динамическое создание дополнительных векторных элементов
+            const vectorBg = document.querySelector('.vector-bg');
+            for (let i = 0; i < 5; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'vector-dot';
+                dot.style.left = Math.random() * 100 + '%';
+                dot.style.top = Math.random() * 100 + '%';
+                dot.style.width = (Math.random() * 3 + 1) + 'px';
+                dot.style.height = dot.style.width;
+                dot.style.animationDelay = (Math.random() * 5) + 's';
+                dot.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                vectorBg.appendChild(dot);
+            }
         });
     </script>
 </body>
