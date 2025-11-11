@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Otkazano Studios</title>
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -111,12 +115,13 @@
             border-color: #5a3a3a;
         }
 
+        /* Контейнер для профиля и админ-бейджа */
         .user-container {
             display: flex;
             align-items: center;
             margin-left: 40px;
         }
-        
+
         .user-profile {
             display: flex;
             align-items: center;
@@ -126,7 +131,7 @@
             border-radius: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .user-profile:hover {
             background: rgba(255,255,255,0.05);
         }
@@ -768,19 +773,15 @@
             .login-button {
                 margin-left: 20px;
             }
-    
+
             .user-container {
                 margin-left: 20px;
             }
-            
-            .user-profile {
-                margin-left: 0;
-            }
-            
+
             .username {
                 display: none;
             }
-        
+
             .admin-badge {
                 font-size: 10px;
                 padding: 6px 12px;
@@ -997,369 +998,430 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Элементы DOM
-            const projectsBtn = document.getElementById('projects-btn');
-            const dropdown = document.getElementById('projects-dropdown');
-            const loginBtn = document.getElementById('login-btn');
-            const authSection = document.getElementById('auth-section');
-            const loginModal = document.getElementById('login-modal');
-            const registerModal = document.getElementById('register-modal');
-            const settingsModal = document.getElementById('settings-modal');
-            const loginClose = document.getElementById('login-close');
-            const registerClose = document.getElementById('register-close');
-            const settingsClose = document.getElementById('settings-close');
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const passwordForm = document.getElementById('password-form');
-            const toRegisterLink = document.getElementById('to-register-link');
-            const toLoginLink = document.getElementById('to-login-link');
-            const logoutBtn = document.getElementById('logout-btn');
-            const loginError = document.getElementById('login-error');
-            const registerError = document.getElementById('register-error');
-            const passwordError = document.getElementById('password-error');
-            const passwordSuccess = document.getElementById('password-success');
-            const avatarSuccess = document.getElementById('avatar-success');
-            const scrollToTop = document.getElementById('scroll-to-top');
-            const avatarUpload = document.getElementById('avatar-upload');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const settingsAvatarUpload = document.getElementById('settings-avatar-upload');
-            const settingsAvatarPreview = document.getElementById('settings-avatar-preview');
+        // 🚨 ЗАМЕНИТЕ ЭТО: Ваши данные из Supabase
+        const supabaseUrl = 'https://kqortewzwvwfhtjqjfor.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxb3J0ZXd6d3Z3Zmh0anFqZm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4MTA4MjgsImV4cCI6MjA3ODM4NjgyOH0.f4fNkeJ40VOtoto0-rIsWp4ntSjyXhtowaazcx_5v2s';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-            // Админы
-            const adminUsers = ['ReFinek', "summi225", 'Admin', 'Root'];
-            
-            let currentUser = null;
-            let avatarDataUrl = null;
+        // Админы
+        const adminUsers = ['ReFinek', 'Admin', 'Root'];
 
-            // Инициализация
-            checkAuthStatus();
-            initAvatarUpload();
+        let currentUser = null;
+        let avatarDataUrl = null;
 
-            // Обработчик для выпадающего меню проектов
-            projectsBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdown.classList.toggle('show');
-            });
+        // Элементы DOM
+        const projectsBtn = document.getElementById('projects-btn');
+        const dropdown = document.getElementById('projects-dropdown');
+        const loginBtn = document.getElementById('login-btn');
+        const authSection = document.getElementById('auth-section');
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const settingsModal = document.getElementById('settings-modal');
+        const loginClose = document.getElementById('login-close');
+        const registerClose = document.getElementById('register-close');
+        const settingsClose = document.getElementById('settings-close');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const passwordForm = document.getElementById('password-form');
+        const toRegisterLink = document.getElementById('to-register-link');
+        const toLoginLink = document.getElementById('to-login-link');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginError = document.getElementById('login-error');
+        const registerError = document.getElementById('register-error');
+        const passwordError = document.getElementById('password-error');
+        const passwordSuccess = document.getElementById('password-success');
+        const avatarSuccess = document.getElementById('avatar-success');
+        const scrollToTop = document.getElementById('scroll-to-top');
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const settingsAvatarUpload = document.getElementById('settings-avatar-upload');
+        const settingsAvatarPreview = document.getElementById('settings-avatar-preview');
+        const teamMembers = document.querySelectorAll('.team-member');
 
-            document.addEventListener('click', (e) => {
-                if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
-                    dropdown.classList.remove('show');
-                }
-            });
-            
-            // Обработчики для панелей команды
-            const teamMembers = document.querySelectorAll('.team-member');
-            
-            teamMembers.forEach(member => {
-                member.addEventListener('click', () => {
-                    teamMembers.forEach(otherMember => {
-                        if (otherMember !== member) {
-                            otherMember.classList.remove('active');
-                        }
-                    });
-                    member.classList.toggle('active');
-                });
-            });
+        // Инициализация
+        checkAuthStatus();
 
-            // Модальные окна
-            loginBtn.addEventListener('click', () => {
-                loginModal.classList.add('show');
-            });
+        // Обработчик для выпадающего меню проектов
+        projectsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
 
-            [loginClose, registerClose, settingsClose].forEach(closeBtn => {
-                closeBtn.addEventListener('click', () => {
-                    loginModal.classList.remove('show');
-                    registerModal.classList.remove('show');
-                    settingsModal.classList.remove('show');
-                    clearErrors();
-                });
-            });
-
-            [loginModal, registerModal, settingsModal].forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        modal.classList.remove('show');
-                        clearErrors();
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // Обработчики для панелей команды
+        teamMembers.forEach(member => {
+            member.addEventListener('click', () => {
+                teamMembers.forEach(otherMember => {
+                    if (otherMember !== member) {
+                        otherMember.classList.remove('active');
                     }
                 });
+                member.classList.toggle('active');
             });
+        });
 
-            toRegisterLink.addEventListener('click', (e) => {
-                e.preventDefault();
+        // Модальные окна
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.add('show');
+        });
+
+        [loginClose, registerClose, settingsClose].forEach(closeBtn => {
+            closeBtn.addEventListener('click', () => {
                 loginModal.classList.remove('show');
-                registerModal.classList.add('show');
-                clearErrors();
-            });
-
-            toLoginLink.addEventListener('click', (e) => {
-                e.preventDefault();
                 registerModal.classList.remove('show');
-                loginModal.classList.add('show');
+                settingsModal.classList.remove('show');
                 clearErrors();
             });
+        });
 
-            // Форма входа
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = document.getElementById('login-username').value;
-                const password = document.getElementById('login-password').value;
-                
-                if (loginUser(username, password)) {
-                    loginModal.classList.remove('show');
-                    loginForm.reset();
+        [loginModal, registerModal, settingsModal].forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
                     clearErrors();
-                    updateAuthUI();
-                } else {
-                    showError(loginError, 'Неверный логин или пароль');
                 }
             });
+        });
 
-            // Форма регистрации
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('register-email').value;
-                const username = document.getElementById('register-username').value;
-                const password = document.getElementById('register-password').value;
-                const passwordConfirm = document.getElementById('register-password-confirm').value;
-                
-                if (password !== passwordConfirm) {
-                    showError(registerError, 'Пароли не совпадают');
-                    return;
-                }
-                
-                if (username.length < 3) {
-                    showError(registerError, 'Логин должен содержать минимум 3 символа');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    showError(registerError, 'Пароль должен содержать минимум 6 символов');
-                    return;
-                }
-                
-                if (registerUser(username, password, email, avatarDataUrl)) {
-                    registerModal.classList.remove('show');
-                    registerForm.reset();
-                    clearErrors();
-                    avatarDataUrl = null;
-                    avatarPreview.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">Превью</div>';
-                    updateAuthUI();
-                    alert(`Добро пожаловать, ${username}!`);
-                } else {
-                    showError(registerError, 'Пользователь с таким логином уже существует');
-                }
-            });
+        toRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginModal.classList.remove('show');
+            registerModal.classList.add('show');
+            clearErrors();
+        });
 
-            // Форма смены пароля
-            passwordForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const oldPassword = document.getElementById('old-password').value;
-                const newPassword = document.getElementById('new-password').value;
-                const newPasswordConfirm = document.getElementById('new-password-confirm').value;
-                
-                if (newPassword !== newPasswordConfirm) {
-                    showError(passwordError, 'Новые пароли не совпадают');
-                    return;
-                }
-                
-                if (newPassword.length < 6) {
-                    showError(passwordError, 'Новый пароль должен содержать минимум 6 символов');
-                    return;
-                }
-                
-                if (changePassword(currentUser, oldPassword, newPassword)) {
-                    showSuccess(passwordSuccess, 'Пароль успешно изменен!');
-                    passwordForm.reset();
-                    setTimeout(() => {
-                        passwordSuccess.classList.remove('show');
-                    }, 3000);
-                } else {
-                    showError(passwordError, 'Старый пароль неверен');
-                }
-            });
+        toLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerModal.classList.remove('show');
+            loginModal.classList.add('show');
+            clearErrors();
+        });
 
-            // Выход из аккаунта
-            logoutBtn.addEventListener('click', () => {
-                if (confirm('Вы уверены, что хотите выйти?')) {
-                    logoutUser();
-                    settingsModal.classList.remove('show');
-                }
-            });
-
-            // Кнопка скролла вверх
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    scrollToTop.classList.add('show');
-                } else {
-                    scrollToTop.classList.remove('show');
-                }
-            });
-
-            scrollToTop.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-
-            // Функции
-            function initAvatarUpload() {
-                // Загрузка аватарки при регистрации
-                avatarUpload.addEventListener('change', (e) => {
-                    handleAvatarUpload(e, avatarPreview);
-                });
-
-                // Загрузка аватарки в настройках
-                settingsAvatarUpload.addEventListener('change', (e) => {
-                    handleAvatarUpload(e, settingsAvatarPreview, true);
-                });
+        // Форма входа
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (await loginUser(username, password)) {
+                loginModal.classList.remove('show');
+                loginForm.reset();
+                clearErrors();
+                updateAuthUI();
+            } else {
+                showError(loginError, 'Неверный логин или пароль');
             }
+        });
 
-            function handleAvatarUpload(event, previewElement, isSettings = false) {
-                const file = event.target.files[0];
-                if (!file) return;
-
-                // Проверка типа файла
-                if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
-                    alert('Пожалуйста, выберите файл в формате PNG, JPG или JPEG');
-                    return;
-                }
-
-                // Проверка размера файла (максимум 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Размер файла не должен превышать 2MB');
-                    return;
-                }р
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Создаем canvas для обрезки до квадрата
-                        const canvas = document.createElement('canvas');
-                        const size = Math.min(img.width, img.height);
-                        canvas.width = size;
-                        canvas.height = size;
-                        
-                        const ctx = canvas.getContext('2d');
-                        // Обрезаем до квадрата по центру
-                        ctx.drawImage(img, 
-                            (img.width - size) / 2, 
-                            (img.height - size) / 2, 
-                            size, size, 
-                            0, 0, 
-                            size, size
-                        );
-                        
-                        const circularCanvas = document.createElement('canvas');
-                        circularCanvas.width = size;
-                        circularCanvas.height = size;
-                        const circularCtx = circularCanvas.getContext('2d');
-                        
-                        // Создаем круглую маску
-                        circularCtx.beginPath();
-                        circularCtx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-                        circularCtx.closePath();
-                        circularCtx.clip();
-                        
-                        circularCtx.drawImage(canvas, 0, 0, size, size);
-                        
-                        const dataUrl = circularCanvas.toDataURL('image/png');
-                        
-                        if (isSettings) {
-                            updateUserAvatar(dataUrl);
-                            showSuccess(avatarSuccess, 'Аватарка успешно обновлена!');
-                            setTimeout(() => {
-                                avatarSuccess.classList.remove('show');
-                            }, 3000);
-                        } else {
-                            avatarDataUrl = dataUrl;
-                        }
-                        
-                        // Показываем превью
-                        previewElement.innerHTML = '';
-                        const previewImg = document.createElement('img');
-                        previewImg.src = dataUrl;
-                        previewElement.appendChild(previewImg);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+        // Форма регистрации
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            
+            if (password !== passwordConfirm) {
+                showError(registerError, 'Пароли не совпадают');
+                return;
             }
+            
+            if (username.length < 3) {
+                showError(registerError, 'Логин должен содержать минимум 3 символа');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError(registerError, 'Пароль должен содержать минимум 6 символов');
+                return;
+            }
+            
+            if (await registerUser(username, password, email, avatarDataUrl)) {
+                registerModal.classList.remove('show');
+                registerForm.reset();
+                clearErrors();
+                avatarDataUrl = null;
+                avatarPreview.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">Превью</div>';
+                updateAuthUI();
+                alert(`Добро пожаловать, ${username}!`);
+            } else {
+                showError(registerError, 'Пользователь с таким логином уже существует');
+            }
+        });
 
-            function registerUser(username, password, email, avatar) {
-                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                
-                if (users[username]) {
-                    return false;
-                }
-                
-                users[username] = {
-                    password: password,
-                    email: email || '',
-                    avatar: avatar || null,
-                    registered: new Date().toISOString(),
-                    isAdmin: adminUsers.includes(username)
-                };
-                
-                localStorage.setItem('otkazano_users', JSON.stringify(users));
+        // Форма смены пароля
+        passwordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const newPasswordConfirm = document.getElementById('new-password-confirm').value;
+            
+            if (newPassword !== newPasswordConfirm) {
+                showError(passwordError, 'Новые пароли не совпадают');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showError(passwordError, 'Новый пароль должен содержать минимум 6 символов');
+                return;
+            }
+            
+            if (await changePassword(currentUser, oldPassword, newPassword)) {
+                showSuccess(passwordSuccess, 'Пароль успешно изменен!');
+                passwordForm.reset();
+                setTimeout(() => {
+                    passwordSuccess.classList.remove('show');
+                }, 3000);
+            } else {
+                showError(passwordError, 'Старый пароль неверен');
+            }
+        });
+
+        // Выход из аккаунта
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                logoutUser();
+                settingsModal.classList.remove('show');
+            }
+        });
+
+        // Кнопка скролла вверх
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTop.classList.add('show');
+            } else {
+                scrollToTop.classList.remove('show');
+            }
+        });
+
+        scrollToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Загрузка аватарок
+        avatarUpload.addEventListener('change', (e) => {
+            handleAvatarUpload(e, avatarPreview);
+        });
+
+        settingsAvatarUpload.addEventListener('change', (e) => {
+            handleAvatarUpload(e, settingsAvatarPreview, true);
+        });
+
+        // ==================== SUPABASE ФУНКЦИИ ====================
+
+        async function registerUser(username, password, email, avatar) {
+            try {
+                // Проверяем существование пользователя
+                const { data: existingUser, error: checkError } = await supabase
+                    .from('users')
+                    .select('username')
+                    .eq('username', username)
+                    .single();
+
+                if (existingUser) return false;
+
+                // Создаем пользователя
+                const { error } = await supabase
+                    .from('users')
+                    .insert([{
+                        username: username,
+                        password: password,
+                        email: email || '',
+                        avatar: avatar,
+                        is_admin: adminUsers.includes(username),
+                        created_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+
                 localStorage.setItem('otkazano_current_user', username);
                 currentUser = username;
                 return true;
-            }
-
-            function loginUser(username, password) {
-                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                
-                if (users[username] && users[username].password === password) {
-                    localStorage.setItem('otkazano_current_user', username);
-                    currentUser = username;
-                    return true;
-                }
-                
+            } catch (error) {
+                console.error('Ошибка регистрации:', error);
                 return false;
             }
+        }
 
-            function changePassword(username, oldPassword, newPassword) {
-                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                
-                if (users[username] && users[username].password === oldPassword) {
-                    users[username].password = newPassword;
-                    localStorage.setItem('otkazano_users', JSON.stringify(users));
-                    return true;
-                }
-                
+        async function loginUser(username, password) {
+            try {
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .single();
+
+                if (error || !user) return false;
+                if (user.password !== password) return false;
+
+                localStorage.setItem('otkazano_current_user', username);
+                currentUser = username;
+                return true;
+            } catch (error) {
+                console.error('Ошибка входа:', error);
                 return false;
             }
+        }
 
-            function updateUserAvatar(avatarDataUrl) {
-                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                if (users[currentUser]) {
-                    users[currentUser].avatar = avatarDataUrl;
-                    localStorage.setItem('otkazano_users', JSON.stringify(users));
-                    updateAuthUI();
+        async function changePassword(username, oldPassword, newPassword) {
+            try {
+                // Сначала проверяем старый пароль
+                const { data: user, error: checkError } = await supabase
+                    .from('users')
+                    .select('password')
+                    .eq('username', username)
+                    .single();
+
+                if (checkError || !user || user.password !== oldPassword) {
+                    return false;
+                }
+
+                // Обновляем пароль
+                const { error } = await supabase
+                    .from('users')
+                    .update({ password: newPassword })
+                    .eq('username', username);
+
+                if (error) throw error;
+                return true;
+            } catch (error) {
+                console.error('Ошибка смены пароля:', error);
+                return false;
+            }
+        }
+
+        async function updateUserAvatar(avatarDataUrl) {
+            try {
+                const { error } = await supabase
+                    .from('users')
+                    .update({ avatar: avatarDataUrl })
+                    .eq('username', currentUser);
+
+                if (error) throw error;
+                updateAuthUI();
+            } catch (error) {
+                console.error('Ошибка обновления аватарки:', error);
+            }
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('otkazano_current_user');
+            currentUser = null;
+            updateAuthUI();
+        }
+
+        async function checkAuthStatus() {
+            currentUser = localStorage.getItem('otkazano_current_user');
+            if (currentUser) {
+                // Проверяем, существует ли пользователь в базе
+                try {
+                    const { data: user, error } = await supabase
+                        .from('users')
+                        .select('username')
+                        .eq('username', currentUser)
+                        .single();
+
+                    if (error || !user) {
+                        // Пользователь удален из базы
+                        logoutUser();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Ошибка проверки пользователя:', error);
                 }
             }
+            updateAuthUI();
+        }
 
-            function logoutUser() {
-                localStorage.removeItem('otkazano_current_user');
-                currentUser = null;
-                updateAuthUI();
+        // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
+
+        function handleAvatarUpload(event, previewElement, isSettings = false) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
+                alert('Пожалуйста, выберите файл в формате PNG, JPG или JPEG');
+                return;
             }
 
-            function checkAuthStatus() {
-                currentUser = localStorage.getItem('otkazano_current_user');
-                updateAuthUI();
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Размер файла не должен превышать 2MB');
+                return;
             }
 
-            function updateAuthUI() {
-                if (currentUser) {
-                    const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
-                    const userData = users[currentUser];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const size = Math.min(img.width, img.height);
+                    canvas.width = size;
+                    canvas.height = size;
                     
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 
+                        (img.width - size) / 2, 
+                        (img.height - size) / 2, 
+                        size, size, 
+                        0, 0, 
+                        size, size
+                    );
+                    
+                    const circularCanvas = document.createElement('canvas');
+                    circularCanvas.width = size;
+                    circularCanvas.height = size;
+                    const circularCtx = circularCanvas.getContext('2d');
+                    
+                    circularCtx.beginPath();
+                    circularCtx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                    circularCtx.closePath();
+                    circularCtx.clip();
+                    
+                    circularCtx.drawImage(canvas, 0, 0, size, size);
+                    
+                    const dataUrl = circularCanvas.toDataURL('image/png');
+                    
+                    if (isSettings) {
+                        updateUserAvatar(dataUrl);
+                        showSuccess(avatarSuccess, 'Аватарка успешно обновлена!');
+                        setTimeout(() => {
+                            avatarSuccess.classList.remove('show');
+                        }, 3000);
+                    } else {
+                        avatarDataUrl = dataUrl;
+                    }
+                    
+                    previewElement.innerHTML = '';
+                    const previewImg = document.createElement('img');
+                    previewImg.src = dataUrl;
+                    previewElement.appendChild(previewImg);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function updateAuthUI() {
+            if (currentUser) {
+                try {
+                    const { data: userData, error } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('username', currentUser)
+                        .single();
+
+                    if (error) throw error;
+
                     let adminBadge = '';
-                    if (userData.isAdmin) {
+                    if (userData.is_admin) {
                         adminBadge = '<div class="admin-badge">Главный папочка</div>';
                     }
                     
@@ -1378,7 +1440,6 @@
                         </div>
                     `;
                     
-                    // Обновляем превью в настройках
                     if (userData.avatar) {
                         settingsAvatarPreview.innerHTML = `<img src="${userData.avatar}" alt="${currentUser}">`;
                     } else {
@@ -1388,32 +1449,34 @@
                     document.getElementById('user-profile').addEventListener('click', () => {
                         settingsModal.classList.add('show');
                     });
-                } else {
-                    authSection.innerHTML = '<button class="nav-button login-button" id="login-btn">Вход</button>';
-                    document.getElementById('login-btn').addEventListener('click', () => {
-                        loginModal.classList.add('show');
-                    });
+                } catch (error) {
+                    console.error('Ошибка загрузки данных пользователя:', error);
                 }
+            } else {
+                authSection.innerHTML = '<button class="nav-button login-button" id="login-btn">Вход</button>';
+                document.getElementById('login-btn').addEventListener('click', () => {
+                    loginModal.classList.add('show');
+                });
             }
+        }
 
-            function showError(element, message) {
-                element.textContent = message;
-                element.classList.add('show');
-            }
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+        }
 
-            function showSuccess(element, message) {
-                element.textContent = message;
-                element.classList.add('show');
-            }
+        function showSuccess(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+        }
 
-            function clearErrors() {
-                loginError.classList.remove('show');
-                registerError.classList.remove('show');
-                passwordError.classList.remove('show');
-                passwordSuccess.classList.remove('show');
-                avatarSuccess.classList.remove('show');
-            }
-        });
+        function clearErrors() {
+            loginError.classList.remove('show');
+            registerError.classList.remove('show');
+            passwordError.classList.remove('show');
+            passwordSuccess.classList.remove('show');
+            avatarSuccess.classList.remove('show');
+        }
     </script>
 </body>
 </html>
