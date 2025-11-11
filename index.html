@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Наша Компания</title>
+    <title>Otkazano Studios</title>
     <style>
         * {
             margin: 0;
@@ -53,8 +53,12 @@
             padding: 15px 0;
             border-bottom: 1px solid #222;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-            position: relative;
-            z-index: 10;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .nav-container {
@@ -62,8 +66,15 @@
             margin: 0 auto;
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 20px;
             flex-wrap: wrap;
+            position: relative;
+        }
+
+        .nav-main-buttons {
+            display: flex;
+            gap: 20px;
         }
 
         .nav-button {
@@ -87,6 +98,17 @@
             color: #fff;
             box-shadow: 0 4px 18px rgba(255,255,255,0.05);
             transform: translateY(-2px);
+        }
+
+        .login-button {
+            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            border: 1px solid #3a2a2a;
+            margin-left: 40px;
+        }
+
+        .login-button:hover {
+            background: linear-gradient(145deg, #352525, #251818);
+            border-color: #5a3a3a;
         }
 
         /* Выпадающее меню */
@@ -128,6 +150,122 @@
             color: #fff;
         }
 
+        /* Модальное окно входа */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #141414);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-title {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #666;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            border: 1px solid #3a2a2a;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-submit:hover {
+            background: linear-gradient(145deg, #352525, #251818);
+            transform: translateY(-2px);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .register-link a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
         /* Лого */
         .logo-container {
             position: relative;
@@ -136,6 +274,7 @@
             height: 450px;
             filter: drop-shadow(0 0 40px rgba(255,255,255,0.25))
                     drop-shadow(0 0 80px rgba(255,255,255,0.15));
+            margin-top: 80px;
         }
 
         .logo-static {
@@ -389,6 +528,39 @@
             font-style: italic;
         }
 
+        /* Кнопка скролла вверх */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            border: 1px solid #3a2a2a;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            background: linear-gradient(145deg, #352525, #251818);
+            transform: translateY(-3px);
+        }
+
         @media (max-width: 768px) {
             .logo-container {
                 width: 300px;
@@ -405,6 +577,24 @@
                 margin-right: 0;
                 margin-bottom: 15px;
             }
+
+            .nav-container {
+                justify-content: space-between;
+                padding: 0 15px;
+            }
+
+            .nav-main-buttons {
+                gap: 10px;
+            }
+
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+
+            .login-button {
+                margin-left: 20px;
+            }
         }
     </style>
 </head>
@@ -417,18 +607,41 @@
 
     <nav>
         <div class="nav-container">
-            <button class="nav-button">О нас</button>
-            <div style="position: relative;">
-                <button class="nav-button" id="projects-btn">Наши проекты</button>
-                <div class="dropdown" id="projects-dropdown">
-                    <a href="https://refinek.github.io/DownToTheInksSite/" class="dropdown-item" target="_blank">
-                        Bendy: Down To The Inks
-                    </a>
+            <div class="nav-main-buttons">
+                <button class="nav-button">О нас</button>
+                <div style="position: relative;">
+                    <button class="nav-button" id="projects-btn">Наши проекты</button>
+                    <div class="dropdown" id="projects-dropdown">
+                        <a href="https://refinek.github.io/DownToTheInksSite/" class="dropdown-item" target="_blank">
+                            Bendy: Down To The Inks
+                        </a>
+                    </div>
                 </div>
+                <button class="nav-button">Посты</button>
             </div>
-            <button class="nav-button">Посты</button>
+            <button class="nav-button login-button" id="login-btn">Вход</button>
         </div>
     </nav>
+
+    <!-- Модальное окно входа -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2 class="modal-title">Вход в аккаунт</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <input type="text" class="form-input" placeholder="Логин" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-input" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="form-submit">Войти</button>
+            </form>
+            <div class="register-link">
+                У вас нет аккаунта? <a href="#" id="register-link">Харегайте его!</a>
+            </div>
+        </div>
+    </div>
 
     <header>
         <div class="logo-container">
@@ -436,7 +649,7 @@
                 <img src="logopartstatic.png" alt="Статичная часть лого">
             </div>
             <div class="logo-rotating">
-                <img src="logopartrotation.png" alt="Вращающаяся часть лого">
+                <img src="ventilator.png" alt="Вращающаяся часть лого">
             </div>
         </div>
     </header>
@@ -454,8 +667,8 @@
             <div class="team-container">
                 <div class="team-member">
                     <div class="member-avatar">
-                        <!-- Замените на свою аватарку -->
-                        <img src="RF.png">
+                        <img src="RF.png" alt="ReFinek" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width:100%;height:100%;background:#444;display:none;align-items:center;justify-content:center;color:#888;">RF</div>
                     </div>
                     <div class="member-info">
                         <div class="member-name">ReFinek</div>
@@ -468,8 +681,8 @@
                 
                 <div class="team-member">
                     <div class="member-avatar">
-                        <!-- Замените на свою аватарку -->
-                        <img src="SB.png">
+                        <img src="SB.png" alt="SummitBadeline" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="width:100%;height:100%;background:#444;display:none;align-items:center;justify-content:center;color:#888;">SB</div>
                     </div>
                     <div class="member-info">
                         <div class="member-name">SummitBadeline</div>
@@ -483,7 +696,7 @@
                 <div class="team-member">
                     <div class="member-avatar">
                         <!-- Замените на свою аватарку -->
-                        <div style="width:100%;height:100%;background:#444;display:flex;align-items:center;justify-content:center;color:#888;">Аватар</div>
+                        <div style="width:100%;height:100%;background:#444;display:flex;align-items:center;justify-content:center;color:#888;">HG</div>
                     </div>
                     <div class="member-info">
                         <div class="member-name">HumidGolf</div>
@@ -501,10 +714,21 @@
         </div>
     </main>
 
+    <!-- Кнопка скролла вверх -->
+    <div class="scroll-to-top" id="scroll-to-top">
+        ↑
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const projectsBtn = document.getElementById('projects-btn');
             const dropdown = document.getElementById('projects-dropdown');
+            const loginBtn = document.getElementById('login-btn');
+            const loginModal = document.getElementById('login-modal');
+            const modalClose = document.getElementById('modal-close');
+            const loginForm = document.getElementById('login-form');
+            const registerLink = document.getElementById('register-link');
+            const scrollToTop = document.getElementById('scroll-to-top');
             
             // Обработчик для выпадающего меню проектов
             projectsBtn.addEventListener('click', (e) => {
@@ -534,6 +758,67 @@
                     member.classList.toggle('active');
                 });
             });
+
+            // Модальное окно входа
+            loginBtn.addEventListener('click', () => {
+                loginModal.classList.add('show');
+            });
+
+            modalClose.addEventListener('click', () => {
+                loginModal.classList.remove('show');
+            });
+
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.classList.remove('show');
+                }
+            });
+
+            registerLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Система регистрации будет добавлена в ближайшее время! Следите за обновлениями!');
+            });
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const login = e.target.querySelector('input[type="text"]').value;
+                const password = e.target.querySelector('input[type="password"]').value;
+                
+                // Простая имитация входа (в будущем можно подключить бэкенд)
+                if (login && password) {
+                    alert(`Добро пожаловать, ${login}! Система аккаунтов находится в разработке.`);
+                    loginModal.classList.remove('show');
+                    loginForm.reset();
+                }
+            });
+
+            // Кнопка скролла вверх
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    scrollToTop.classList.add('show');
+                } else {
+                    scrollToTop.classList.remove('show');
+                }
+            });
+
+            scrollToTop.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Сохранение данных в localStorage (базовая реализация системы аккаунтов)
+            function saveUserData(login, password) {
+                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                users[login] = { password: password, registered: new Date().toISOString() };
+                localStorage.setItem('otkazano_users', JSON.stringify(users));
+            }
+
+            function checkUserCredentials(login, password) {
+                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                return users[login] && users[login].password === password;
+            }
         });
     </script>
 </body>
