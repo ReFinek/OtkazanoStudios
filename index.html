@@ -118,6 +118,13 @@
             gap: 10px;
             margin-left: 40px;
             cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: rgba(255,255,255,0.05);
         }
 
         .user-avatar {
@@ -139,6 +146,26 @@
             color: #fff;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        /* Админ панель */
+        .admin-badge {
+            background: linear-gradient(145deg, #1a3a1a, #143214);
+            border: 1px solid #2a5a2a;
+            color: #8f8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
+            to { box-shadow: 0 0 25px rgba(0, 255, 0, 0.5); }
         }
 
         /* Выпадающее меню */
@@ -208,9 +235,11 @@
             border-radius: 12px;
             padding: 30px;
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.7);
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-close {
@@ -314,39 +343,95 @@
             display: block;
         }
 
-        /* Выбор аватарки */
-        .avatar-selection {
-            display: flex;
-            gap: 10px;
+        .success-message {
+            color: #44ff44;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Загрузка аватарки */
+        .avatar-upload {
+            text-align: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
-        .avatar-option {
-            width: 60px;
-            height: 60px;
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 2px solid #444;
-            cursor: pointer;
+            border: 3px solid #555;
+            margin: 0 auto 15px;
             overflow: hidden;
-            transition: all 0.3s ease;
+            background: #333;
+            position: relative;
         }
 
-        .avatar-option:hover {
-            transform: scale(1.1);
-            border-color: #666;
-        }
-
-        .avatar-option.selected {
-            border-color: #fff;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        .avatar-option img {
+        .avatar-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .upload-button {
+            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            border: 1px solid #3a2a2a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .upload-button:hover {
+            background: linear-gradient(145deg, #352525, #251818);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        /* Настройки аккаунта */
+        .settings-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-title {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logout-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(145deg, #3a1a1a, #2a1414);
+            border: 1px solid #5a2a2a;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(145deg, #452525, #351818);
         }
 
         /* Лого */
@@ -686,6 +771,11 @@
             .username {
                 display: none;
             }
+
+            .admin-badge {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
         }
     </style>
 </head>
@@ -744,9 +834,15 @@
             <h2 class="modal-title">Регистрация</h2>
             <form id="register-form">
                 <div class="form-group">
-                    <label class="form-label">Выберите аватарку:</label>
-                    <div class="avatar-selection" id="avatar-selection">
-                        <!-- Аватарки будут добавлены через JavaScript -->
+                    <label class="form-label">Аватарка:</label>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview" id="avatar-preview">
+                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">Превью</div>
+                        </div>
+                        <label class="upload-button">
+                            Загрузить аватарку
+                            <input type="file" class="upload-input" id="avatar-upload" accept=".png,.jpg,.jpeg">
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -766,6 +862,51 @@
             </form>
             <div class="form-link">
                 Уже есть аккаунт? <a href="#" id="to-login-link">Войдите!</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно настроек аккаунта -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="settings-close">&times;</button>
+            <h2 class="modal-title">Настройки аккаунта</h2>
+            
+            <div class="settings-section">
+                <h3 class="settings-title">Смена аватарки</h3>
+                <div class="avatar-upload">
+                    <div class="avatar-preview" id="settings-avatar-preview">
+                        <!-- Аватарка будет загружена через JS -->
+                    </div>
+                    <label class="upload-button">
+                        Загрузить новую аватарку
+                        <input type="file" class="upload-input" id="settings-avatar-upload" accept=".png,.jpg,.jpeg">
+                    </label>
+                </div>
+                <div class="success-message" id="avatar-success"></div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-title">Смена пароля</h3>
+                <form id="password-form">
+                    <div class="form-group">
+                        <input type="password" class="form-input" placeholder="Старый пароль" required id="old-password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-input" placeholder="Новый пароль" required id="new-password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-input" placeholder="Повторите новый пароль" required id="new-password-confirm">
+                    </div>
+                    <div class="error-message" id="password-error"></div>
+                    <div class="success-message" id="password-success"></div>
+                    <button type="submit" class="form-submit">Сменить пароль</button>
+                </form>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-title">Управление аккаунтом</h3>
+                <button class="logout-button" id="logout-btn">Выйти из аккаунта</button>
             </div>
         </div>
     </div>
@@ -822,7 +963,6 @@
                 
                 <div class="team-member">
                     <div class="member-avatar">
-                        <!-- Замените на свою аватарку -->
                         <div style="width:100%;height:100%;background:#444;display:flex;align-items:center;justify-content:center;color:#888;">HG</div>
                     </div>
                     <div class="member-info">
@@ -855,32 +995,36 @@
             const authSection = document.getElementById('auth-section');
             const loginModal = document.getElementById('login-modal');
             const registerModal = document.getElementById('register-modal');
+            const settingsModal = document.getElementById('settings-modal');
             const loginClose = document.getElementById('login-close');
             const registerClose = document.getElementById('register-close');
+            const settingsClose = document.getElementById('settings-close');
             const loginForm = document.getElementById('login-form');
             const registerForm = document.getElementById('register-form');
+            const passwordForm = document.getElementById('password-form');
             const toRegisterLink = document.getElementById('to-register-link');
             const toLoginLink = document.getElementById('to-login-link');
+            const logoutBtn = document.getElementById('logout-btn');
             const loginError = document.getElementById('login-error');
             const registerError = document.getElementById('register-error');
+            const passwordError = document.getElementById('password-error');
+            const passwordSuccess = document.getElementById('password-success');
+            const avatarSuccess = document.getElementById('avatar-success');
             const scrollToTop = document.getElementById('scroll-to-top');
-            const avatarSelection = document.getElementById('avatar-selection');
+            const avatarUpload = document.getElementById('avatar-upload');
+            const avatarPreview = document.getElementById('avatar-preview');
+            const settingsAvatarUpload = document.getElementById('settings-avatar-upload');
+            const settingsAvatarPreview = document.getElementById('settings-avatar-preview');
 
-            // Предопределенные аватарки
-            const defaultAvatars = [
-                'default1.png',
-                'default2.png', 
-                'default3.png',
-                'default4.png',
-                'default5.png'
-            ];
-
-            let selectedAvatar = 'default1.png';
+            // Админы
+            const adminUsers = ['ReFinek', 'Admin', 'Root'];
+            
             let currentUser = null;
+            let avatarDataUrl = null;
 
             // Инициализация
-            initAvatars();
             checkAuthStatus();
+            initAvatarUpload();
 
             // Обработчик для выпадающего меню проектов
             projectsBtn.addEventListener('click', (e) => {
@@ -913,17 +1057,16 @@
                 loginModal.classList.add('show');
             });
 
-            loginClose.addEventListener('click', () => {
-                loginModal.classList.remove('show');
-                clearErrors();
+            [loginClose, registerClose, settingsClose].forEach(closeBtn => {
+                closeBtn.addEventListener('click', () => {
+                    loginModal.classList.remove('show');
+                    registerModal.classList.remove('show');
+                    settingsModal.classList.remove('show');
+                    clearErrors();
+                });
             });
 
-            registerClose.addEventListener('click', () => {
-                registerModal.classList.remove('show');
-                clearErrors();
-            });
-
-            [loginModal, registerModal].forEach(modal => {
+            [loginModal, registerModal, settingsModal].forEach(modal => {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) {
                         modal.classList.remove('show');
@@ -985,14 +1128,52 @@
                     return;
                 }
                 
-                if (registerUser(username, password, email, selectedAvatar)) {
+                if (registerUser(username, password, email, avatarDataUrl)) {
                     registerModal.classList.remove('show');
                     registerForm.reset();
                     clearErrors();
+                    avatarDataUrl = null;
+                    avatarPreview.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">Превью</div>';
                     updateAuthUI();
                     alert(`Добро пожаловать, ${username}!`);
                 } else {
                     showError(registerError, 'Пользователь с таким логином уже существует');
+                }
+            });
+
+            // Форма смены пароля
+            passwordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const oldPassword = document.getElementById('old-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const newPasswordConfirm = document.getElementById('new-password-confirm').value;
+                
+                if (newPassword !== newPasswordConfirm) {
+                    showError(passwordError, 'Новые пароли не совпадают');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    showError(passwordError, 'Новый пароль должен содержать минимум 6 символов');
+                    return;
+                }
+                
+                if (changePassword(currentUser, oldPassword, newPassword)) {
+                    showSuccess(passwordSuccess, 'Пароль успешно изменен!');
+                    passwordForm.reset();
+                    setTimeout(() => {
+                        passwordSuccess.classList.remove('show');
+                    }, 3000);
+                } else {
+                    showError(passwordError, 'Старый пароль неверен');
+                }
+            });
+
+            // Выход из аккаунта
+            logoutBtn.addEventListener('click', () => {
+                if (confirm('Вы уверены, что хотите выйти?')) {
+                    logoutUser();
+                    settingsModal.classList.remove('show');
                 }
             });
 
@@ -1013,51 +1194,103 @@
             });
 
             // Функции
-            function initAvatars() {
-                defaultAvatars.forEach(avatar => {
-                    const avatarOption = document.createElement('div');
-                    avatarOption.className = 'avatar-option';
-                    if (avatar === selectedAvatar) {
-                        avatarOption.classList.add('selected');
-                    }
-                    
-                    const img = document.createElement('img');
-                    img.src = avatar;
-                    img.alt = 'Аватар';
-                    img.onerror = function() {
-                        this.parentElement.innerHTML = 'AV';
-                        this.parentElement.style.background = '#444';
-                        this.parentElement.style.display = 'flex';
-                        this.parentElement.style.alignItems = 'center';
-                        this.parentElement.style.justifyContent = 'center';
-                        this.parentElement.style.color = '#888';
-                    };
-                    
-                    avatarOption.appendChild(img);
-                    avatarOption.addEventListener('click', () => {
-                        document.querySelectorAll('.avatar-option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        avatarOption.classList.add('selected');
-                        selectedAvatar = avatar;
-                    });
-                    
-                    avatarSelection.appendChild(avatarOption);
+            function initAvatarUpload() {
+                // Загрузка аватарки при регистрации
+                avatarUpload.addEventListener('change', (e) => {
+                    handleAvatarUpload(e, avatarPreview);
                 });
+
+                // Загрузка аватарки в настройках
+                settingsAvatarUpload.addEventListener('change', (e) => {
+                    handleAvatarUpload(e, settingsAvatarPreview, true);
+                });
+            }
+
+            function handleAvatarUpload(event, previewElement, isSettings = false) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                // Проверка типа файла
+                if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
+                    alert('Пожалуйста, выберите файл в формате PNG, JPG или JPEG');
+                    return;
+                }
+
+                // Проверка размера файла (максимум 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Размер файла не должен превышать 2MB');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Создаем canvas для обрезки до квадрата
+                        const canvas = document.createElement('canvas');
+                        const size = Math.min(img.width, img.height);
+                        canvas.width = size;
+                        canvas.height = size;
+                        
+                        const ctx = canvas.getContext('2d');
+                        // Обрезаем до квадрата по центру
+                        ctx.drawImage(img, 
+                            (img.width - size) / 2, 
+                            (img.height - size) / 2, 
+                            size, size, 
+                            0, 0, 
+                            size, size
+                        );
+                        
+                        const circularCanvas = document.createElement('canvas');
+                        circularCanvas.width = size;
+                        circularCanvas.height = size;
+                        const circularCtx = circularCanvas.getContext('2d');
+                        
+                        // Создаем круглую маску
+                        circularCtx.beginPath();
+                        circularCtx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+                        circularCtx.closePath();
+                        circularCtx.clip();
+                        
+                        circularCtx.drawImage(canvas, 0, 0, size, size);
+                        
+                        const dataUrl = circularCanvas.toDataURL('image/png');
+                        
+                        if (isSettings) {
+                            updateUserAvatar(dataUrl);
+                            showSuccess(avatarSuccess, 'Аватарка успешно обновлена!');
+                            setTimeout(() => {
+                                avatarSuccess.classList.remove('show');
+                            }, 3000);
+                        } else {
+                            avatarDataUrl = dataUrl;
+                        }
+                        
+                        // Показываем превью
+                        previewElement.innerHTML = '';
+                        const previewImg = document.createElement('img');
+                        previewImg.src = dataUrl;
+                        previewElement.appendChild(previewImg);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
 
             function registerUser(username, password, email, avatar) {
                 const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
                 
                 if (users[username]) {
-                    return false; // Пользователь уже существует
+                    return false;
                 }
                 
                 users[username] = {
                     password: password,
                     email: email || '',
-                    avatar: avatar,
-                    registered: new Date().toISOString()
+                    avatar: avatar || null,
+                    registered: new Date().toISOString(),
+                    isAdmin: adminUsers.includes(username)
                 };
                 
                 localStorage.setItem('otkazano_users', JSON.stringify(users));
@@ -1078,6 +1311,27 @@
                 return false;
             }
 
+            function changePassword(username, oldPassword, newPassword) {
+                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                
+                if (users[username] && users[username].password === oldPassword) {
+                    users[username].password = newPassword;
+                    localStorage.setItem('otkazano_users', JSON.stringify(users));
+                    return true;
+                }
+                
+                return false;
+            }
+
+            function updateUserAvatar(avatarDataUrl) {
+                const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
+                if (users[currentUser]) {
+                    users[currentUser].avatar = avatarDataUrl;
+                    localStorage.setItem('otkazano_users', JSON.stringify(users));
+                    updateAuthUI();
+                }
+            }
+
             function logoutUser() {
                 localStorage.removeItem('otkazano_current_user');
                 currentUser = null;
@@ -1094,20 +1348,33 @@
                     const users = JSON.parse(localStorage.getItem('otkazano_users') || '{}');
                     const userData = users[currentUser];
                     
+                    let adminBadge = '';
+                    if (userData.isAdmin) {
+                        adminBadge = '<div class="admin-badge">Главный папочка</div>';
+                    }
+                    
                     authSection.innerHTML = `
                         <div class="user-profile" id="user-profile">
                             <div class="user-avatar">
-                                <img src="${userData.avatar}" alt="${currentUser}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div style="width:100%;height:100%;background:#444;display:none;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>
+                                ${userData.avatar ? 
+                                    `<img src="${userData.avatar}" alt="${currentUser}">` : 
+                                    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>`
+                                }
                             </div>
                             <div class="username">${currentUser}</div>
                         </div>
+                        ${adminBadge}
                     `;
                     
+                    // Обновляем превью в настройках
+                    if (userData.avatar) {
+                        settingsAvatarPreview.innerHTML = `<img src="${userData.avatar}" alt="${currentUser}">`;
+                    } else {
+                        settingsAvatarPreview.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;">${currentUser.charAt(0)}</div>`;
+                    }
+                    
                     document.getElementById('user-profile').addEventListener('click', () => {
-                        if (confirm('Вы хотите выйти?')) {
-                            logoutUser();
-                        }
+                        settingsModal.classList.add('show');
                     });
                 } else {
                     authSection.innerHTML = '<button class="nav-button login-button" id="login-btn">Вход</button>';
@@ -1122,9 +1389,17 @@
                 element.classList.add('show');
             }
 
+            function showSuccess(element, message) {
+                element.textContent = message;
+                element.classList.add('show');
+            }
+
             function clearErrors() {
                 loginError.classList.remove('show');
                 registerError.classList.remove('show');
+                passwordError.classList.remove('show');
+                passwordSuccess.classList.remove('show');
+                avatarSuccess.classList.remove('show');
             }
         });
     </script>
