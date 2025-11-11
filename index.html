@@ -51,7 +51,7 @@
             background: radial-gradient(circle, rgba(40,40,40,0.1) 0%, transparent 70%);
         }
 
-        /* Навигационная панель - ПЕРВОЙ */
+        /* Навигационная панель */
         nav {
             background: linear-gradient(135deg, #151515 0%, #1a1a1a 100%);
             padding: 15px 0;
@@ -114,29 +114,65 @@
             transform: translateY(0);
         }
 
-        /* Хедер и лого - ПОСЛЕ навигации */
+        /* Контейнер для лого с двумя слоями */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            width: 200px; /* Размер контейнера */
+            height: 200px;
+            filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.4)) 
+                    drop-shadow(0 0 40px rgba(80, 80, 80, 0.2));
+        }
+
+        /* Статичная часть лого */
+        .logo-static {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .logo-static img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Вращающаяся часть лого */
+        .logo-rotating {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; /* 4264/10368 ≈ 0.41, но сделаем чуть больше для видимости */
+            height: 70%;
+            z-index: 1;
+            animation: rotate-slow 72s linear infinite; /* 1.2 минуты = 72 секунды */
+        }
+
+        .logo-rotating img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Анимация вращения */
+        @keyframes rotate-slow {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Хедер */
         header {
             padding: 40px 0 30px 0;
             text-align: center;
             position: relative;
-        }
-
-        .logo {
-            display: inline-block;
-            filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.4)) 
-                    drop-shadow(0 0 40px rgba(80, 80, 80, 0.2));
-            transition: all 0.4s ease;
-        }
-
-        .logo:hover {
-            filter: drop-shadow(0 0 25px rgba(100, 100, 100, 0.5)) 
-                    drop-shadow(0 0 50px rgba(100, 100, 100, 0.3));
-            transform: scale(1.08);
-        }
-
-        .logo img {
-            width: auto;
-            height: 340px;
         }
 
         /* Основной контент */
@@ -192,9 +228,9 @@
                 padding: 14px 24px;
             }
 
-            .logo img {
-                width: auto;
-                height: 300px;
+            .logo-container {
+                width: 150px;
+                height: 150px;
             }
 
             .corner-decoration {
@@ -214,20 +250,26 @@
     <div class="corner-decoration corner-tl"></div>
     <div class="corner-decoration corner-br"></div>
 
-    <!-- Навигационная панель - ТЕПЕРЬ ПЕРВОЙ -->
+    <!-- Навигационная панель -->
     <nav>
         <div class="nav-container">
             <button class="nav-button">О нас</button>
             <button class="nav-button">Наши проекты</button>
             <button class="nav-button">(хз что написать)</button>
-            <!-- Место для будущих кнопок -->
         </div>
     </nav>
 
-    <!-- Хедер с лого - ТЕПЕРЬ ПОСЛЕ навигации -->
+    <!-- Хедер с лого -->
     <header>
-        <div class="logo">
-            <img src="otkazanologo.png" alt="Логотип компании">
+        <div class="logo-container">
+            <!-- Вращающаяся часть (задний план) -->
+            <div class="logo-rotating">
+                <img src="ventilator.png" alt="Вращающаяся часть лого">
+            </div>
+            <!-- Статичная часть (передний план) -->
+            <div class="logo-static">
+                <img src="logopartstatic.png" alt="Статичная часть лого">
+            </div>
         </div>
     </header>
 
@@ -239,13 +281,11 @@
     </main>
 
     <script>
-        // Простой скрипт для интерактивности
         document.addEventListener('DOMContentLoaded', function() {
             const buttons = document.querySelectorAll('.nav-button');
             
             buttons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Временная функция для демонстрации
                     this.style.background = 'linear-gradient(145deg, #2a2a2a, #1f1f1f)';
                     setTimeout(() => {
                         this.style.background = '';
