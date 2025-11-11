@@ -1,6 +1,261 @@
-<h1>:)</h1>
-<style>
-  h1:hover {
-    display:none;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наша Компания</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Декоративные элементы фона */
+        .bg-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .decoration-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(20,20,20,0.1) 0%, transparent 70%);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            background: radial-gradient(circle, rgba(30,30,30,0.15) 0%, transparent 70%);
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 8%;
+            background: radial-gradient(circle, rgba(40,40,40,0.1) 0%, transparent 70%);
+        }
+
+        /* Навигационная панель - ПЕРВОЙ */
+        nav {
+            background: linear-gradient(135deg, #151515 0%, #1a1a1a 100%);
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+        }
+
+        .nav-button {
+            background: linear-gradient(145deg, #1a1a1a, #151515);
+            border: 1px solid #2a2a2a;
+            color: #bbb;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-button:hover {
+            background: linear-gradient(145deg, #252525, #1a1a1a);
+            border-color: #3a3a3a;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
+        .nav-button:active {
+            transform: translateY(0);
+        }
+
+        /* Хедер и лого - ПОСЛЕ навигации */
+        header {
+            padding: 40px 0 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(80, 80, 80, 0.4)) 
+                    drop-shadow(0 0 40px rgba(80, 80, 80, 0.2));
+            transition: all 0.4s ease;
+        }
+
+        .logo:hover {
+            filter: drop-shadow(0 0 25px rgba(100, 100, 100, 0.5)) 
+                    drop-shadow(0 0 50px rgba(100, 100, 100, 0.3));
+            transform: scale(1.08);
+        }
+
+        .logo img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid #2a2a2a;
+            background: #1a1a1a;
+        }
+
+        /* Основной контент */
+        .content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #888;
+            margin-bottom: 30px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Дополнительные декоративные элементы */
+        .corner-decoration {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #1a1a1a;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .corner-tl {
+            top: 50px;
+            left: 50px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-br {
+            bottom: 50px;
+            right: 50px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .nav-button {
+                width: 220px;
+                padding: 14px 24px;
+            }
+
+            .logo img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .corner-decoration {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Декоративные элементы фона -->
+    <div class="bg-decoration">
+        <div class="decoration-circle circle-1"></div>
+        <div class="decoration-circle circle-2"></div>
+    </div>
+
+    <!-- Угловые декоративные элементы -->
+    <div class="corner-decoration corner-tl"></div>
+    <div class="corner-decoration corner-br"></div>
+
+    <!-- Навигационная панель - ТЕПЕРЬ ПЕРВОЙ -->
+    <nav>
+        <div class="nav-container">
+            <button class="nav-button">О нас</button>
+            <button class="nav-button">Наши проекты</button>
+            <button class="nav-button">(хз что написать)</button>
+            <!-- Место для будущих кнопок -->
+        </div>
+    </nav>
+
+    <!-- Хедер с лого - ТЕПЕРЬ ПОСЛЕ навигации -->
+    <header>
+        <div class="logo">
+            <img src="https://via.placeholder.com/140/1a1a1a/333333?text=LOGO" alt="Логотип компании">
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="content">
+        <div class="welcome-text">
+            Добро пожаловать на наш сайт. Здесь скоро появится больше информации...
+        </div>
+    </main>
+
+    <script>
+        // Простой скрипт для интерактивности
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.nav-button');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Временная функция для демонстрации
+                    this.style.background = 'linear-gradient(145deg, #2a2a2a, #1f1f1f)';
+                    setTimeout(() => {
+                        this.style.background = '';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
