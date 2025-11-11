@@ -21,6 +21,42 @@
             font-family: 'Arial', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Анимированный текстурированный фон */
+        .textured-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('bg.png');
+            background-repeat: repeat;
+            background-size: 300px 300px; /* Размер тайла текстуры */
+            opacity: 0.15; /* Затемнение текстуры */
+            z-index: -3;
+            animation: bg-scroll 120s linear infinite;
+        }
+
+        /* Дополнительное затемнение поверх текстуры */
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(8,8,8,0.7) 0%, rgba(8,8,8,0.9) 100%);
+            z-index: -2;
+        }
+
+        @keyframes bg-scroll {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 1000px 1000px;
+            }
         }
 
         /* Элегантная векторная анимация фона */
@@ -31,7 +67,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -2;
+            z-index: -1;
             opacity: 0.1;
             background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 60%);
         }
@@ -53,7 +89,7 @@
 
         /* Навигация */
         nav {
-            background: linear-gradient(135deg, #111, #1a1a1a);
+            background: linear-gradient(135deg, rgba(17, 17, 17, 0.9), rgba(26, 26, 26, 0.9));
             padding: 15px 0;
             border-bottom: 1px solid #222;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
@@ -63,6 +99,7 @@
             width: 100%;
             z-index: 1000;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .nav-container {
@@ -82,7 +119,7 @@
         }
 
         .nav-button {
-            background: linear-gradient(145deg, #1a1a1a, #141414);
+            background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(20, 20, 20, 0.8));
             border: 1px solid #2a2a2a;
             color: #bbb;
             padding: 12px 24px;
@@ -94,10 +131,11 @@
             text-transform: uppercase;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(5px);
         }
 
         .nav-button:hover {
-            background: linear-gradient(145deg, #252525, #181818);
+            background: linear-gradient(145deg, rgba(37, 37, 37, 0.9), rgba(24, 24, 24, 0.9));
             border-color: #444;
             color: #fff;
             box-shadow: 0 4px 18px rgba(255,255,255,0.05);
@@ -105,13 +143,13 @@
         }
 
         .login-button {
-            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            background: linear-gradient(145deg, rgba(42, 26, 26, 0.8), rgba(26, 20, 20, 0.8));
             border: 1px solid #3a2a2a;
             margin-left: 40px;
         }
 
         .login-button:hover {
-            background: linear-gradient(145deg, #352525, #251818);
+            background: linear-gradient(145deg, rgba(53, 37, 37, 0.9), rgba(37, 24, 24, 0.9));
             border-color: #5a3a3a;
         }
 
@@ -159,7 +197,7 @@
 
         /* Админ панель */
         .admin-badge {
-            background: linear-gradient(145deg, #1a3a1a, #143214);
+            background: linear-gradient(145deg, rgba(26, 58, 26, 0.8), rgba(20, 50, 20, 0.8));
             border: 1px solid #2a5a2a;
             color: #8f8;
             padding: 8px 16px;
@@ -171,11 +209,119 @@
             box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
             animation: glow 2s ease-in-out infinite alternate;
             white-space: nowrap;
+            backdrop-filter: blur(5px);
         }
 
         @keyframes glow {
             from { box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); }
             to { box-shadow: 0 0 25px rgba(0, 255, 0, 0.5); }
+        }
+
+        /* Стили для списка пользователей */
+        .users-search-container {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .users-search-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .users-search-input:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        .users-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-list-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid #222;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .user-list-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .user-list-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid #555;
+            overflow: hidden;
+            background: #333;
+        }
+
+        .user-list-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-list-info {
+            flex: 1;
+        }
+
+        .user-list-name {
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .user-list-email {
+            color: #888;
+            font-size: 10px;
+        }
+
+        .user-list-admin {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 2px solid #0f0;
+        }
+
+        .user-list-admin-badge {
+            background: #0f0;
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .users-stats {
+            padding: 10px;
+            border-top: 1px solid #333;
+            background: rgba(0,0,0,0.3);
+            font-size: 11px;
+            color: #888;
+        }
+
+        .no-users {
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .users-loading {
+            padding: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
         }
 
         /* Выпадающее меню */
@@ -193,6 +339,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .dropdown.show {
@@ -240,7 +387,7 @@
         }
 
         .modal-content {
-            background: linear-gradient(145deg, #1a1a1a, #141414);
+            background: linear-gradient(145deg, rgba(26, 26, 26, 0.9), rgba(20, 20, 20, 0.9));
             border: 1px solid #333;
             border-radius: 12px;
             padding: 30px;
@@ -250,6 +397,7 @@
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
+            backdrop-filter: blur(10px);
         }
 
         .modal-close {
@@ -308,7 +456,7 @@
         .form-submit {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            background: linear-gradient(145deg, rgba(42, 26, 26, 0.8), rgba(26, 20, 20, 0.8));
             border: 1px solid #3a2a2a;
             border-radius: 6px;
             color: #fff;
@@ -320,7 +468,7 @@
         }
 
         .form-submit:hover {
-            background: linear-gradient(145deg, #352525, #251818);
+            background: linear-gradient(145deg, rgba(53, 37, 37, 0.9), rgba(37, 24, 24, 0.9));
             transform: translateY(-2px);
         }
 
@@ -388,7 +536,7 @@
         }
 
         .upload-button {
-            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            background: linear-gradient(145deg, rgba(42, 26, 26, 0.8), rgba(26, 20, 20, 0.8));
             border: 1px solid #3a2a2a;
             color: #fff;
             padding: 10px 20px;
@@ -399,7 +547,7 @@
         }
 
         .upload-button:hover {
-            background: linear-gradient(145deg, #352525, #251818);
+            background: linear-gradient(145deg, rgba(53, 37, 37, 0.9), rgba(37, 24, 24, 0.9));
         }
 
         .upload-input {
@@ -428,7 +576,7 @@
         .logout-button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(145deg, #3a1a1a, #2a1414);
+            background: linear-gradient(145deg, rgba(58, 26, 26, 0.8), rgba(42, 20, 20, 0.8));
             border: 1px solid #5a2a2a;
             border-radius: 6px;
             color: #fff;
@@ -441,7 +589,7 @@
         }
 
         .logout-button:hover {
-            background: linear-gradient(145deg, #452525, #351818);
+            background: linear-gradient(145deg, rgba(69, 37, 37, 0.9), rgba(53, 24, 24, 0.9));
         }
 
         /* Лого */
@@ -519,6 +667,7 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
 
         .glitch-frame::before {
@@ -713,7 +862,7 @@
             right: 30px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(145deg, #2a1a1a, #1a1414);
+            background: linear-gradient(145deg, rgba(42, 26, 26, 0.8), rgba(26, 20, 20, 0.8));
             border: 1px solid #3a2a2a;
             border-radius: 50%;
             color: #fff;
@@ -727,6 +876,7 @@
             transition: all 0.3s ease;
             z-index: 999;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
         }
 
         .scroll-to-top.show {
@@ -735,7 +885,7 @@
         }
 
         .scroll-to-top:hover {
-            background: linear-gradient(145deg, #352525, #251818);
+            background: linear-gradient(145deg, rgba(53, 37, 37, 0.9), rgba(37, 24, 24, 0.9));
             transform: translateY(-3px);
         }
 
@@ -787,10 +937,18 @@
                 padding: 6px 12px;
                 margin-left: 10px;
             }
+
+            .users-dropdown {
+                width: 280px !important;
+                left: -100px !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Новый анимированный фон -->
+    <div class="textured-bg"></div>
+    <div class="bg-overlay"></div>
     <div class="vector-bg">
         <div class="vector-line line-1"></div>
         <div class="vector-line line-2"></div>
@@ -811,12 +969,30 @@
                 </div>
                 <button class="nav-button">Посты</button>
             </div>
+
+            <!-- Секция списка пользователей для админов -->
+            <div id="admin-users-section" style="display: none; position: relative;">
+                <button class="nav-button" id="users-btn">👥 Пользователи</button>
+                <div class="dropdown users-dropdown" id="users-dropdown" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                    <div class="users-search-container">
+                        <input type="text" id="users-search" class="users-search-input" placeholder="Поиск по никам...">
+                    </div>
+                    <div class="users-list" id="users-list">
+                        <!-- Список пользователей будет загружаться здесь -->
+                    </div>
+                    <div class="users-stats" id="users-stats">
+                        <!-- Статистика будет здесь -->
+                    </div>
+                </div>
+            </div>
+
             <div id="auth-section">
                 <button class="nav-button login-button" id="login-btn">Вход</button>
             </div>
         </div>
     </nav>
 
+    <!-- Модальные окна остаются без изменений -->
     <!-- Модальное окно входа -->
     <div class="modal" id="login-modal">
         <div class="modal-content">
@@ -999,18 +1175,17 @@
 
     <script>
         // 🚨 ЗАМЕНИТЕ ЭТО: Ваши данные из Supabase
-        // 🚨 ЗАМЕНИТЕ ЭТО: Ваши данные из Supabase
         const supabaseUrl = 'https://kqortewzwvwfhtjqjfor.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtxb3J0ZXd6d3Z3Zmh0anFqZm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4MTA4MjgsImV4cCI6MjA3ODM4NjgyOH0.f4fNkeJ40VOtoto0-rIsWp4ntSjyXhtowaazcx_5v2s';
-        
+
         let supabase = null;
-        
+
         // Админы
         const adminUsers = ['ReFinek', 'Admin', 'Root'];
-        
+
         let currentUser = null;
         let avatarDataUrl = null;
-        
+
         // Элементы DOM
         let projectsBtn, dropdown, loginBtn, authSection, loginModal, registerModal, settingsModal;
         let loginClose, registerClose, settingsClose, loginForm, registerForm, passwordForm;
@@ -1018,12 +1193,15 @@
         let passwordSuccess, avatarSuccess, scrollToTop, avatarUpload, avatarPreview;
         let settingsAvatarUpload, settingsAvatarPreview, teamMembers;
         
+        // Новые элементы для списка пользователей
+        let adminUsersSection, usersBtn, usersDropdown, usersSearch, usersList, usersStats;
+
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 DOM загружен, инициализируем приложение...');
             init();
         });
-        
+
         async function init() {
             console.log('🔧 Инициализация приложения...');
             
@@ -1038,7 +1216,7 @@
             
             console.log('✅ Приложение инициализировано');
         }
-        
+
         async function initSupabase() {
             console.log('🔌 Инициализация Supabase...');
             
@@ -1067,7 +1245,7 @@
                 return false;
             }
         }
-        
+
         function initDOMElements() {
             console.log('🔍 Поиск элементов DOM...');
             
@@ -1099,15 +1277,24 @@
             settingsAvatarPreview = document.getElementById('settings-avatar-preview');
             teamMembers = document.querySelectorAll('.team-member');
             
+            // Новые элементы для списка пользователей
+            adminUsersSection = document.getElementById('admin-users-section');
+            usersBtn = document.getElementById('users-btn');
+            usersDropdown = document.getElementById('users-dropdown');
+            usersSearch = document.getElementById('users-search');
+            usersList = document.getElementById('users-list');
+            usersStats = document.getElementById('users-stats');
+            
             console.log(`📊 Найдено элементов: ${[
                 projectsBtn, dropdown, loginBtn, authSection, loginModal, registerModal, settingsModal,
                 loginClose, registerClose, settingsClose, loginForm, registerForm, passwordForm,
                 toRegisterLink, toLoginLink, logoutBtn, loginError, registerError, passwordError,
                 passwordSuccess, avatarSuccess, scrollToTop, avatarUpload, avatarPreview,
-                settingsAvatarUpload, settingsAvatarPreview, teamMembers
+                settingsAvatarUpload, settingsAvatarPreview, teamMembers,
+                adminUsersSection, usersBtn, usersDropdown, usersSearch, usersList, usersStats
             ].filter(Boolean).length}`);
         }
-        
+
         async function testConnection() {
             if (!supabase) {
                 console.error('❌ Supabase клиент не инициализирован');
@@ -1137,7 +1324,7 @@
                 return false;
             }
         }
-        
+
         function setupEventListeners() {
             console.log('🔧 Настройка обработчиков событий...');
             
@@ -1147,7 +1334,7 @@
                     e.stopPropagation();
                     dropdown.classList.toggle('show');
                 });
-        
+
                 document.addEventListener('click', (e) => {
                     if (!dropdown.contains(e.target) && e.target !== projectsBtn) {
                         dropdown.classList.remove('show');
@@ -1170,14 +1357,14 @@
                     });
                 });
             }
-        
+
             // Модальные окна
             if (loginBtn && loginModal) {
                 loginBtn.addEventListener('click', () => {
                     loginModal.classList.add('show');
                 });
             }
-        
+
             [loginClose, registerClose, settingsClose].forEach(closeBtn => {
                 if (closeBtn) {
                     closeBtn.addEventListener('click', () => {
@@ -1188,7 +1375,7 @@
                     });
                 }
             });
-        
+
             [loginModal, registerModal, settingsModal].forEach(modal => {
                 if (modal) {
                     modal.addEventListener('click', (e) => {
@@ -1199,7 +1386,7 @@
                     });
                 }
             });
-        
+
             if (toRegisterLink && loginModal && registerModal) {
                 toRegisterLink.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1208,7 +1395,7 @@
                     clearErrors();
                 });
             }
-        
+
             if (toLoginLink && registerModal && loginModal) {
                 toLoginLink.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1217,7 +1404,7 @@
                     clearErrors();
                 });
             }
-        
+
             // Форма входа
             if (loginForm) {
                 loginForm.addEventListener('submit', async (e) => {
@@ -1235,7 +1422,7 @@
                     }
                 });
             }
-        
+
             // Форма регистрации
             if (registerForm) {
                 registerForm.addEventListener('submit', async (e) => {
@@ -1275,7 +1462,7 @@
                     }
                 });
             }
-        
+
             // Форма смены пароля
             if (passwordForm) {
                 passwordForm.addEventListener('submit', async (e) => {
@@ -1305,7 +1492,7 @@
                     }
                 });
             }
-        
+
             // Выход из аккаунта
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
@@ -1315,7 +1502,7 @@
                     }
                 });
             }
-        
+
             // Кнопка скролла вверх
             window.addEventListener('scroll', () => {
                 if (scrollToTop) {
@@ -1326,7 +1513,7 @@
                     }
                 }
             });
-        
+
             if (scrollToTop) {
                 scrollToTop.addEventListener('click', () => {
                     window.scrollTo({
@@ -1335,25 +1522,50 @@
                     });
                 });
             }
-        
+
             // Загрузка аватарок
             if (avatarUpload) {
                 avatarUpload.addEventListener('change', (e) => {
                     handleAvatarUpload(e, avatarPreview);
                 });
             }
-        
+
             if (settingsAvatarUpload && settingsAvatarPreview) {
                 settingsAvatarUpload.addEventListener('change', (e) => {
                     handleAvatarUpload(e, settingsAvatarPreview, true);
                 });
             }
+
+            // Добавь обработчики для списка пользователей
+            if (usersBtn && usersDropdown) {
+                usersBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    usersDropdown.classList.toggle('show');
+                    if (usersDropdown.classList.contains('show')) {
+                        loadUsersList();
+                    }
+                });
+
+                // Закрытие при клике вне dropdown
+                document.addEventListener('click', (e) => {
+                    if (!usersDropdown.contains(e.target) && e.target !== usersBtn) {
+                        usersDropdown.classList.remove('show');
+                    }
+                });
+
+                // Поиск пользователей
+                if (usersSearch) {
+                    usersSearch.addEventListener('input', (e) => {
+                        filterUsersList(e.target.value);
+                    });
+                }
+            }
             
             console.log('✅ Все обработчики настроены!');
         }
-        
+
         // ==================== SUPABASE ФУНКЦИИ ====================
-        
+
         async function registerUser(username, password, email, avatar) {
             if (!supabase) {
                 console.error('❌ Supabase не доступен');
@@ -1368,9 +1580,9 @@
                     .select('username')
                     .eq('username', username)
                     .maybeSingle();
-        
+
                 if (existingUser) return false;
-        
+
                 // Создаем пользователя
                 const { error } = await supabase
                     .from('users')
@@ -1383,7 +1595,7 @@
                         created_at: new Date().toISOString()
                     })
                     .select();
-        
+
                 if (error) {
                     console.error('❌ Ошибка вставки:', error);
                     if (error.code === '42P01') {
@@ -1394,7 +1606,7 @@
                     showErrorNotification('Ошибка регистрации: ' + error.message);
                     return false;
                 }
-        
+
                 localStorage.setItem('otkazano_current_user', username);
                 currentUser = username;
                 return true;
@@ -1404,7 +1616,7 @@
                 return false;
             }
         }
-        
+
         async function loginUser(username, password) {
             if (!supabase) {
                 console.error('❌ Supabase не доступен');
@@ -1420,7 +1632,7 @@
                     .select('*')
                     .eq('username', username)
                     .maybeSingle();
-        
+
                 if (error) {
                     console.error('❌ Ошибка запроса:', error);
                     if (error.code === 'PGRST116') {
@@ -1431,18 +1643,18 @@
                     showErrorNotification('Ошибка базы данных: ' + error.message);
                     return false;
                 }
-        
+
                 if (!user) {
                     console.log('👤 Пользователь не существует');
                     return false;
                 }
-        
+
                 console.log('🔑 Проверка пароля...');
                 if (user.password !== password) {
                     console.log('❌ Неверный пароль');
                     return false;
                 }
-        
+
                 console.log('✅ Вход успешен!');
                 localStorage.setItem('otkazano_current_user', username);
                 currentUser = username;
@@ -1453,7 +1665,91 @@
                 return false;
             }
         }
-        
+
+        async function changePassword(username, oldPassword, newPassword) {
+            if (!supabase) {
+                console.error('❌ Supabase не доступен');
+                showErrorNotification('База данных недоступна. Попробуйте позже.');
+                return false;
+            }
+            
+            try {
+                console.log('🔐 Смена пароля...');
+                
+                // Сначала проверяем старый пароль
+                const { data: user, error: checkError } = await supabase
+                    .from('users')
+                    .select('password')
+                    .eq('username', username)
+                    .maybeSingle();
+
+                if (checkError) {
+                    console.error('❌ Ошибка проверки пароля:', checkError);
+                    return false;
+                }
+
+                if (!user || user.password !== oldPassword) {
+                    console.log('❌ Старый пароль неверен');
+                    return false;
+                }
+
+                // Обновляем пароль
+                const { error } = await supabase
+                    .from('users')
+                    .update({ password: newPassword })
+                    .eq('username', username);
+
+                if (error) {
+                    console.error('❌ Ошибка обновления пароля:', error);
+                    showErrorNotification('Ошибка смены пароля: ' + error.message);
+                    return false;
+                }
+
+                console.log('✅ Пароль успешно изменен!');
+                return true;
+            } catch (error) {
+                console.error('❌ Ошибка смены пароля:', error);
+                showErrorNotification('Ошибка смены пароля.');
+                return false;
+            }
+        }
+
+        async function updateUserAvatar(avatarDataUrl) {
+            if (!supabase) {
+                console.error('❌ Supabase не доступен');
+                showErrorNotification('База данных недоступна. Попробуйте позже.');
+                return;
+            }
+            
+            try {
+                console.log('🔄 Обновление аватарки...');
+                const { error } = await supabase
+                    .from('users')
+                    .update({ avatar: avatarDataUrl })
+                    .eq('username', currentUser);
+
+                if (error) {
+                    console.error('❌ Ошибка обновления аватарки:', error);
+                    showErrorNotification('Ошибка обновления аватарки: ' + error.message);
+                    return;
+                }
+
+                console.log('✅ Аватарка обновлена!');
+                updateAuthUI();
+            } catch (error) {
+                console.error('❌ Ошибка обновления аватарки:', error);
+                showErrorNotification('Ошибка обновления аватарки.');
+            }
+        }
+
+        function logoutUser() {
+            console.log('🚪 Выход из аккаунта...');
+            localStorage.removeItem('otkazano_current_user');
+            currentUser = null;
+            updateAuthUI();
+            showSuccessNotification('Вы успешно вышли из аккаунта');
+        }
+
         async function checkAuthStatus() {
             currentUser = localStorage.getItem('otkazano_current_user');
             if (currentUser) {
@@ -1471,7 +1767,7 @@
                         .select('username')
                         .eq('username', currentUser)
                         .maybeSingle();
-        
+
                     if (error) {
                         console.error('❌ Ошибка проверки пользователя:', error);
                         if (error.code === 'PGRST116') {
@@ -1481,7 +1777,7 @@
                             return;
                         }
                     }
-        
+
                     if (!user) {
                         // Пользователь удален из базы
                         console.log('👤 Пользователь не найден в базе');
@@ -1496,23 +1792,122 @@
             }
             updateAuthUI();
         }
-        
+
+        // ==================== ФУНКЦИИ ДЛЯ СПИСКА ПОЛЬЗОВАТЕЛЕЙ ====================
+
+        async function loadUsersList() {
+            if (!usersList || !supabase) return;
+            
+            usersList.innerHTML = '<div class="users-loading">Загрузка пользователей...</div>';
+            
+            try {
+                const { data: users, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('❌ Ошибка загрузки пользователей:', error);
+                    usersList.innerHTML = '<div class="no-users">Ошибка загрузки</div>';
+                    return;
+                }
+
+                if (!users || users.length === 0) {
+                    usersList.innerHTML = '<div class="no-users">Пользователей нет</div>';
+                    updateUsersStats(0);
+                    return;
+                }
+
+                displayUsersList(users);
+                updateUsersStats(users.length);
+                
+            } catch (error) {
+                console.error('❌ Ошибка загрузки пользователей:', error);
+                usersList.innerHTML = '<div class="no-users">Ошибка загрузки</div>';
+            }
+        }
+
+        function displayUsersList(users) {
+            if (!usersList) return;
+            
+            usersList.innerHTML = '';
+            
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = `user-list-item ${user.is_admin ? 'user-list-admin' : ''}`;
+                
+                userItem.innerHTML = `
+                    <div class="user-list-avatar">
+                        ${user.avatar ? 
+                            `<img src="${user.avatar}" alt="${user.username}">` : 
+                            `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;font-size:12px;">${user.username.charAt(0).toUpperCase()}</div>`
+                        }
+                    </div>
+                    <div class="user-list-info">
+                        <div class="user-list-name">
+                            ${user.username}
+                            ${user.is_admin ? '<span class="user-list-admin-badge">ADMIN</span>' : ''}
+                        </div>
+                        ${user.email ? `<div class="user-list-email">${user.email}</div>` : ''}
+                    </div>
+                `;
+                
+                // Добавляем обработчик клика на пользователя
+                userItem.addEventListener('click', () => {
+                    alert(`Пользователь: ${user.username}\nEmail: ${user.email || 'не указан'}\nАдмин: ${user.is_admin ? 'Да' : 'Нет'}\nЗарегистрирован: ${new Date(user.created_at).toLocaleDateString()}`);
+                });
+                
+                usersList.appendChild(userItem);
+            });
+        }
+
+        function filterUsersList(searchTerm) {
+            if (!usersList) return;
+            
+            const userItems = usersList.querySelectorAll('.user-list-item');
+            let visibleCount = 0;
+            
+            userItems.forEach(item => {
+                const username = item.querySelector('.user-list-name').textContent.toLowerCase();
+                const email = item.querySelector('.user-list-email')?.textContent.toLowerCase() || '';
+                
+                if (username.includes(searchTerm.toLowerCase()) || email.includes(searchTerm.toLowerCase())) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Показываем сообщение если ничего не найдено
+            if (visibleCount === 0 && searchTerm) {
+                usersList.innerHTML = '<div class="no-users">Пользователи не найдены</div>';
+            }
+        }
+
+        function updateUsersStats(totalUsers) {
+            if (!usersStats) return;
+            
+            // Можно добавить больше статистики позже
+            usersStats.innerHTML = `Всего пользователей: ${totalUsers}`;
+        }
+
         // ==================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ====================
-        
+
         function handleAvatarUpload(event, previewElement, isSettings = false) {
             const file = event.target.files[0];
             if (!file) return;
-        
+
             if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
                 alert('Пожалуйста, выберите файл в формате PNG, JPG или JPEG');
                 return;
             }
-        
+
             if (file.size > 2 * 1024 * 1024) {
                 alert('Размер файла не должен превышать 2MB');
                 return;
             }
-        
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -1571,91 +1966,7 @@
             };
             reader.readAsDataURL(file);
         }
-        
-        async function updateUserAvatar(avatarDataUrl) {
-            if (!supabase) {
-                console.error('❌ Supabase не доступен');
-                showErrorNotification('База данных недоступна. Попробуйте позже.');
-                return;
-            }
-            
-            try {
-                console.log('🔄 Обновление аватарки...');
-                const { error } = await supabase
-                    .from('users')
-                    .update({ avatar: avatarDataUrl })
-                    .eq('username', currentUser);
-        
-                if (error) {
-                    console.error('❌ Ошибка обновления аватарки:', error);
-                    showErrorNotification('Ошибка обновления аватарки: ' + error.message);
-                    return;
-                }
-        
-                console.log('✅ Аватарка обновлена!');
-                updateAuthUI();
-            } catch (error) {
-                console.error('❌ Ошибка обновления аватарки:', error);
-                showErrorNotification('Ошибка обновления аватарки.');
-            }
-        }
-        
-        async function changePassword(username, oldPassword, newPassword) {
-            if (!supabase) {
-                console.error('❌ Supabase не доступен');
-                showErrorNotification('База данных недоступна. Попробуйте позже.');
-                return false;
-            }
-            
-            try {
-                console.log('🔐 Смена пароля...');
-                
-                // Сначала проверяем старый пароль
-                const { data: user, error: checkError } = await supabase
-                    .from('users')
-                    .select('password')
-                    .eq('username', username)
-                    .maybeSingle();
-        
-                if (checkError) {
-                    console.error('❌ Ошибка проверки пароля:', checkError);
-                    return false;
-                }
-        
-                if (!user || user.password !== oldPassword) {
-                    console.log('❌ Старый пароль неверен');
-                    return false;
-                }
-        
-                // Обновляем пароль
-                const { error } = await supabase
-                    .from('users')
-                    .update({ password: newPassword })
-                    .eq('username', username);
-        
-                if (error) {
-                    console.error('❌ Ошибка обновления пароля:', error);
-                    showErrorNotification('Ошибка смены пароля: ' + error.message);
-                    return false;
-                }
-        
-                console.log('✅ Пароль успешно изменен!');
-                return true;
-            } catch (error) {
-                console.error('❌ Ошибка смены пароля:', error);
-                showErrorNotification('Ошибка смены пароля.');
-                return false;
-            }
-        }
-        
-        function logoutUser() {
-            console.log('🚪 Выход из аккаунта...');
-            localStorage.removeItem('otkazano_current_user');
-            currentUser = null;
-            updateAuthUI();
-            showSuccessNotification('Вы успешно вышли из аккаунта');
-        }
-        
+
         async function updateAuthUI() {
             if (!authSection) {
                 console.warn('⚠️ authSection не найден');
@@ -1674,7 +1985,7 @@
                             .select('*')
                             .eq('username', currentUser)
                             .maybeSingle();
-        
+
                         if (error) {
                             console.error('❌ Ошибка загрузки данных пользователя:', error);
                             showErrorNotification('Ошибка загрузки данных профиля');
@@ -1682,16 +1993,26 @@
                         }
                         userData = data;
                     }
-        
+
                     if (!userData) {
                         console.warn('⚠️ Данные пользователя не найдены');
                         logoutUser();
                         return;
                     }
-        
+
                     let adminBadge = '';
                     if (userData.is_admin) {
                         adminBadge = '<div class="admin-badge">Главный папочка</div>';
+                        
+                        // ПОКАЗЫВАЕМ СЕКЦИЮ ПОЛЬЗОВАТЕЛЕЙ ТОЛЬКО ДЛЯ АДМИНОВ
+                        if (adminUsersSection) {
+                            adminUsersSection.style.display = 'block';
+                        }
+                    } else {
+                        // СКРЫВАЕМ СЕКЦИЮ ПОЛЬЗОВАТЕЛЕЙ ДЛЯ НЕ-АДМИНОВ
+                        if (adminUsersSection) {
+                            adminUsersSection.style.display = 'none';
+                        }
                     }
                     
                     authSection.innerHTML = `
@@ -1728,6 +2049,11 @@
                     showErrorNotification('Ошибка загрузки профиля');
                 }
             } else {
+                // СКРЫВАЕМ СЕКЦИЮ ПОЛЬЗОВАТЕЛЕЙ ДЛЯ ГОСТЕЙ
+                if (adminUsersSection) {
+                    adminUsersSection.style.display = 'none';
+                }
+                
                 authSection.innerHTML = '<button class="nav-button login-button" id="login-btn">Вход</button>';
                 const newLoginBtn = document.getElementById('login-btn');
                 if (newLoginBtn && loginModal) {
@@ -1738,28 +2064,28 @@
                 console.log('✅ Интерфейс обновлен для гостя');
             }
         }
-        
+
         function showError(element, message) {
             if (element) {
                 element.textContent = message;
                 element.classList.add('show');
             }
         }
-        
+
         function showSuccess(element, message) {
             if (element) {
                 element.textContent = message;
                 element.classList.add('show');
             }
         }
-        
+
         function clearErrors() {
             const errors = [loginError, registerError, passwordError, passwordSuccess, avatarSuccess];
             errors.forEach(element => {
                 if (element) element.classList.remove('show');
             });
         }
-        
+
         function showSuccessNotification(message) {
             const notification = document.createElement('div');
             notification.style.cssText = `
@@ -1781,7 +2107,7 @@
                 notification.remove();
             }, 3000);
         }
-        
+
         function showErrorNotification(message) {
             const notification = document.createElement('div');
             notification.style.cssText = `
