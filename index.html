@@ -1590,7 +1590,7 @@
             }
             
             try {
-                // Проверяем существование пользователя
+                // Проверяем сущестpiterние пользователя
                 const { data: existingUser, error: checkError } = await supabase
                     .from('users')
                     .select('username')
