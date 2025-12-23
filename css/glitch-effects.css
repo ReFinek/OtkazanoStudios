@@ -1,0 +1,124 @@
+/* Эффекты глитчей */
+.glitch {
+    position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    color: var(--accent-color);
+    animation: glitch-anim-1 3s infinite linear alternate-reverse;
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    z-index: -1;
+}
+
+.glitch::after {
+    color: var(--secondary-color);
+    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    z-index: -2;
+}
+
+/* Эффект "разрыва" при наведении */
+.glitch-hover {
+    position: relative;
+    transition: var(--transition);
+}
+
+.glitch-hover:hover {
+    animation: glitch-burst 0.3s ease-in-out;
+}
+
+@keyframes glitch-burst {
+    0% { transform: translate(0); }
+    20% { transform: translate(-3px, 3px); }
+    40% { transform: translate(3px, -3px); }
+    60% { transform: translate(-3px, -3px); }
+    80% { transform: translate(3px, 3px); }
+    100% { transform: translate(0); }
+}
+
+/* Мерцание экрана (редко) */
+@keyframes screen-flicker {
+    0%, 100% { opacity: 1; }
+    5%, 45%, 55%, 95% { opacity: 0.95; }
+    10%, 40%, 60%, 90% { opacity: 1; }
+    15%, 35%, 65%, 85% { opacity: 0.9; }
+    20%, 30%, 70%, 80% { opacity: 0.8; }
+    25%, 75% { opacity: 0.7; }
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 2px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    animation: scanlines 1s steps(2) infinite;
+}
+
+@keyframes scanlines {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(1px); }
+}
+
+/* Эффект случайных помех */
+.random-glitch {
+    animation: random-glitch 8s infinite;
+}
+
+@keyframes random-glitch {
+    0%, 100% { transform: translate(0); }
+    2%, 4%, 8%, 10%, 12%, 16%, 18%, 22%, 24%, 28%, 30%, 32%, 36%, 38%, 42%, 44%, 48%, 50%, 52%, 56%, 58%, 62%, 64%, 68%, 70%, 72%, 76%, 78%, 82%, 84%, 88%, 90%, 92%, 96%, 98% { transform: translate(0); }
+    6% { transform: translate(-5px, 5px); }
+    14% { transform: translate(5px, -5px); }
+    26% { transform: translate(5px, 5px); }
+    34% { transform: translate(-5px, -5px); }
+    46% { transform: translate(-3px, 3px); }
+    54% { transform: translate(3px, -3px); }
+    66% { transform: translate(3px, 3px); }
+    74% { transform: translate(-3px, -3px); }
+    86% { transform: translate(-2px, 2px); }
+    94% { transform: translate(2px, -2px); }
+}
+
+/* Эффект TV помех на тексте */
+.tv-text-static {
+    position: relative;
+    display: inline-block;
+}
+
+.tv-text-static::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(rgba(255,255,255,0.03) 50%, rgba(0,0,0,0.03) 50%),
+        linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.03), rgba(0,0,255,0.03));
+    background-size: 100% 2px, 100% 100%;
+    opacity: 0;
+    animation: tv-static 4s infinite steps(2);
+}
+
+@keyframes tv-static {
+    0%, 100% { opacity: 0; }
+    3%, 7%, 13%, 17%, 23%, 27%, 33%, 37%, 43%, 47%, 53%, 57%, 63%, 67%, 73%, 77%, 83%, 87%, 93%, 97% { opacity: 0; }
+    5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95% { opacity: 0.1; }
+}
