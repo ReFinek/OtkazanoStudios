@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otkazano Studios — Где идеи ломают реальность</title>
+    <meta name="description" content="Otkazano Studios — команда разработчиков, создающая атмосферные 3D-игры с элементами хоррора. Наш первый проект: Bendy: Down To The Inks">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/glitch-effects.css">
+    <link rel="stylesheet" href="css/team-styles.css">
+    <!-- Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Загрузочный экран -->
+    <div class="loader-overlay">
+        <div class="glitch-loader">
+            <div class="glitch-text">OTKAZANO</div>
+            <div class="loader-progress">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="loader-status">Подключение к серверам...</div>
+        </div>
+    </div>
+
+    <!-- TV помехи (Canvas) -->
+    <canvas class="tv-static-canvas"></canvas>
+    
+    <!-- CRT эффекты -->
+    <div class="crt-effects">
+        <div class="scanline-overlay"></div>
+        <div class="screen-curve"></div>
+        <div class="vignette"></div>
+    </div>
+
+    <!-- Навигация -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo-min">
+                <div class="logo-static-mini"></div>
+            </div>
+            <div class="nav-main-buttons">
+                <button class="nav-button active">Главная</button>
+                <div class="dropdown-container">
+                    <button class="nav-button dropdown-trigger" id="projects-btn">Проекты 
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu" id="projects-dropdown">
+                        <a href="projects.html" class="dropdown-item">
+                            <i class="fas fa-gamepad"></i> Все проекты
+                        </a>
+                        <a href="https://refinek.github.io/DownToTheInksSite/" class="dropdown-item" target="_blank">
+                            <i class="fas fa-bolt"></i> Bendy: Down To The Inks
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-rocket"></i> Грядущие проекты
+                        </a>
+                    </div>
+                </div>
+                <button class="nav-button">Новости</button>
+                <button class="nav-button">О нас</button>
+            </div>
+            
+            <div class="nav-right">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div id="auth-section"></div>
+                <div id="admin-users-section"></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3D сцена с лого -->
+    <div class="hero-section">
+        <div class="logo-scene">
+            <div id="logo-container"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="main-title glitch" data-text="OTKAZANO STUDIOS">OTKAZANO STUDIOS</h1>
+            <p class="subtitle">Где идеи ломают реальность</p>
+            <div class="hero-buttons">
+                <button class="hero-button primary">Наши проекты</button>
+                <button class="hero-button secondary">Присоединиться к команде</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- О нас -->
+    <section class="about-section section">
+        <div class="container">
+            <div class="glitch-frame">
+                <h2 class="section-title glitch" data-text="О СТУДИИ">О СТУДИИ</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Мы — начинающая команда разработчиков игр, цель которой — создавать атмосферные исследовательские 3D-игры с элементами хоррора. Наша философия — погружение в уникальные вселенные через детализированный мир, захватывающий геймплей и неповторимую атмосферу.</p>
+                        <p>В данный момент мы выкладываемся на максимум, чтобы сделать наш дебютный проект <span class="highlight">"Bendy: Down To The Inks"</span> игрой достойного уровня. Но это только начало — мы планируем продолжать развиваться в том же духе даже после релиза первой игры!</p>
+                        <p>Наша конечная цель — стать профессиональной игровой студией, которая оставит след в индустрии и приведет нашу компанию к успеху.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number glitch-count" data-target="2">0</div>
+                            <div class="stat-label">Завершенных проекта</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number glitch-count" data-target="18">0</div>
+                            <div class="stat-label">Месяцев работы</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number glitch-count" data-target="4">0</div>
+                            <div class="stat-label">Члена команды</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number glitch-count" data-target="100">0</div>
+                            <div class="stat-label">Чашек кофе</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Команда -->
+    <section class="team-section section">
+        <div class="container">
+            <div class="glitch-frame">
+                <h2 class="section-title glitch" data-text="НАША КОМАНДА">НАША КОМАНДА</h2>
+                <div class="team-grid" id="team-container">
+                    <!-- Карточки команды будут загружаться динамически -->
+                </div>
+                <div class="fun-text">
+                    <i class="fas fa-heart pulse"></i> Эти прекрасные чубриксы сейчас занимаются нашим первым проектом :3
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Достижения и партнеры -->
+    <section class="achievements-section section">
+        <div class="container">
+            <div class="glitch-frame">
+                <h2 class="section-title glitch" data-text="ДОСТИЖЕНИЯ">ДОСТИЖЕНИЯ</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Первая игра</h3>
+                        <p>Разработка дебютного проекта "Bendy: Down To The Inks" началась в 2024 году</p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Партнерства</h3>
+                        <p>Сотрудничество с художниками и композиторами для создания уникальной атмосферы</p>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Сообщество</h3>
+                        <p>Активное общение с игроками и сбор обратной связи для улучшения проектов</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3 class="footer-title glitch" data-text="OTKAZANO">OTKAZANO</h3>
+                    <p>Где идеи ломают реальность</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Ссылки</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="projects.html">Проекты</a></li>
+                        <li><a href="news.html">Новости</a></li>
+                        <li><a href="#">О нас</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Юридическое</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Политика конфиденциальности</a></li>
+                        <li><a href="#">Пользовательское соглашение</a></li>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Подписка</h4>
+                    <p>Получайте новости о наших проектах</p>
+                    <div class="subscribe-form">
+                        <input type="email" placeholder="Ваш email" class="subscribe-input">
+                        <button class="subscribe-button"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Otkazano Studios. Все права защищены. <span class="terminal-blink">_</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Кнопка скролла вверх -->
+    <button id="scroll-to-top" class="scroll-button">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Система уведомлений -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Модальные окна -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content auth-modal">
+            <button class="modal-close" id="login-close">&times;</button>
+            <h2 class="modal-title glitch" data-text="ВХОД">ВХОД</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-input" placeholder="Логин" required id="login-username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" placeholder="Пароль" required id="login-password">
+                    </div>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me"> Запомнить меня
+                    </label>
+                    <a href="#" class="forgot-password">Забыли пароль?</a>
+                </div>
+                <div class="error-message" id="login-error"></div>
+                <button type="submit" class="form-submit button-glow">Войти</button>
+            </form>
+            <div class="form-divider">или</div>
+            <button class="social-login google">
+                <i class="fab fa-google"></i> Войти через Google
+            </button>
+            <div class="form-link">
+                Нет аккаунта? <a href="#" id="to-register-link">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="register-modal">
+        <div class="modal-content auth-modal">
+            <button class="modal-close" id="register-close">&times;</button>
+            <h2 class="modal-title glitch" data-text="РЕГИСТРАЦИЯ">РЕГИСТРАЦИЯ</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label class="form-label">Аватарка</label>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview" id="avatar-preview">
+                            <div class="preview-placeholder">?</div>
+                        </div>
+                        <label class="upload-button">
+                            <i class="fas fa-upload"></i> Выбрать аватарку
+                            <input type="file" class="upload-input" id="avatar-upload" accept="image/*">
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="form-input" placeholder="Email (необязательно)" id="register-email">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="form-input" placeholder="Логин" required id="register-username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" placeholder="Пароль" required id="register-password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="form-input" placeholder="Повторите пароль" required id="register-password-confirm">
+                    </div>
+                </div>
+                <div class="form-terms">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="accept-terms" required> Я согласен с 
+                        <a href="#" class="terms-link">условиями использования</a>
+                    </label>
+                </div>
+                <div class="error-message" id="register-error"></div>
+                <button type="submit" class="form-submit button-glow">Зарегистрироваться</button>
+            </form>
+            <div class="form-divider">или</div>
+            <button class="social-login discord">
+                <i class="fab fa-discord"></i> Зарегистрироваться через Discord
+            </button>
+            <div class="form-link">
+                Уже есть аккаунт? <a href="#" id="to-login-link">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="settings-modal">
+        <div class="modal-content settings-modal">
+            <button class="modal-close" id="settings-close">&times;</button>
+            <h2 class="modal-title glitch" data-text="НАСТРОЙКИ">НАСТРОЙКИ</h2>
+            <div class="settings-tabs">
+                <button class="tab-button active" data-tab="profile">Профиль</button>
+                <button class="tab-button" data-tab="account">Аккаунт</button>
+                <button class="tab-button" data-tab="notifications">Уведомления</button>
+            </div>
+            <div class="tab-content active" id="profile-tab">
+                <div class="settings-section">
+                    <h3 class="settings-title">Смена аватарки</h3>
+                    <div class="avatar-upload">
+                        <div class="avatar-preview" id="settings-avatar-preview">
+                            <!-- Аватарка будет загружена через JS -->
+                        </div>
+                        <label class="upload-button">
+                            <i class="fas fa-sync-alt"></i> Загрузить новую
+                            <input type="file" class="upload-input" id="settings-avatar-upload" accept="image/*">
+                        </label>
+                    </div>
+                    <div class="success-message" id="avatar-success"></div>
+                </div>
+                <div class="settings-section">
+                    <h3 class="settings-title">Личная информация</h3>
+                    <form id="profile-form">
+                        <div class="form-group">
+                            <label class="form-label">Отображаемое имя</label>
+                            <div class="input-icon">
+                                <i class="fas fa-signature"></i>
+                                <input type="text" class="form-input" id="display-name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Статус</label>
+                            <div class="input-icon">
+                                <i class="fas fa-comment"></i>
+                                <input type="text" class="form-input" id="user-status" placeholder="Онлайн">
+                            </div>
+                        </div>
+                        <button type="submit" class="form-submit button-glow">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-content" id="account-tab">
+                <div class="settings-section">
+                    <h3 class="settings-title">Смена пароля</h3>
+                    <form id="password-form">
+                        <div class="form-group">
+                            <label class="form-label">Текущий пароль</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" class="form-input" placeholder="Старый пароль" required id="old-password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Новый пароль</label>
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" class="form-input" placeholder="Новый пароль" required id="new-password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Подтвердите новый пароль</label>
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" class="form-input" placeholder="Повторите пароль" required id="new-password-confirm">
+                            </div>
+                        </div>
+                        <div class="error-message" id="password-error"></div>
+                        <div class="success-message" id="password-success"></div>
+                        <button type="submit" class="form-submit button-glow">Сменить пароль</button>
+                    </form>
+                </div>
+                <div class="settings-section">
+                    <h3 class="settings-title">Управление аккаунтом</h3>
+                    <div class="account-options">
+                        <button class="option-button delete-account">
+                            <i class="fas fa-trash-alt"></i> Удалить аккаунт
+                        </button>
+                        <button class="option-button deactivate-account">
+                            <i class="fas fa-user-slash"></i> Деактивировать
+                        </button>
+                    </div>
+                    <button class="logout-button" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти из аккаунта
+                    </button>
+                </div>
+            </div>
+            <div class="tab-content" id="notifications-tab">
+                <div class="settings-section">
+                    <h3 class="settings-title">Настройки уведомлений</h3>
+                    <div class="notification-settings">
+                        <div class="notification-option">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Новые проекты
+                            </label>
+                        </div>
+                        <div class="notification-option">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Обновления игр
+                            </label>
+                        </div>
+                        <div class="notification-option">
+                            <label class="checkbox-label">
+                                <input type="checkbox"> Спецпредложения
+                            </label>
+                        </div>
+                        <div class="notification-option">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked> Новости студии
+                            </label>
+                        </div>
+                    </div>
+                    <button class="form-submit button-glow">Сохранить настройки</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно админки -->
+    <div class="modal" id="admin-modal">
+        <div class="modal-content admin-modal">
+            <button class="modal-close" id="admin-close">&times;</button>
+            <h2 class="modal-title glitch" data-text="АДМИН-ПАНЕЛЬ">АДМИН-ПАНЕЛЬ</h2>
+            <div class="admin-tabs">
+                <button class="tab-button active" data-tab="users">Пользователи</button>
+                <button class="tab-button" data-tab="stats">Статистика</button>
+                <button class="tab-button" data-tab="logs">Логи</button>
+                <button class="tab-button" data-tab="team">Команда</button>
+            </div>
+            <div class="admin-content">
+                <div class="tab-content active" id="users-tab">
+                    <div class="admin-search-bar">
+                        <input type="text" class="admin-search-input" placeholder="Поиск пользователей...">
+                        <button class="admin-search-button"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="users-list-container">
+                        <div class="users-list-header">
+                            <div class="header-cell">Пользователь</div>
+                            <div class="header-cell">Роль</div>
+                            <div class="header-cell">Статус</div>
+                            <div class="header-cell">Действия</div>
+                        </div>
+                        <div class="users-list-body" id="admin-users-list">
+                            <!-- Список пользователей будет загружен через JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="stats-tab">
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <h3>Всего пользователей</h3>
+                            <div class="stat-value" id="total-users">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Онлайн сейчас</h3>
+                            <div class="stat-value" id="online-users">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Новых за день</h3>
+                            <div class="stat-value" id="new-users">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Проектов</h3>
+                            <div class="stat-value">1</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="user-activity-chart"></canvas>
+                    </div>
+                </div>
+                <div class="tab-content" id="logs-tab">
+                    <div class="logs-container">
+                        <div class="log-item">
+                            <span class="log-time">14:32</span>
+                            <span class="log-user">ReFinek</span>
+                            <span class="log-action">обновил роль пользователя <strong>summi225</strong> на Администратор</span>
+                        </div>
+                        <div class="log-item">
+                            <span class="log-time">12:15</span>
+                            <span class="log-user">System</span>
+                            <span class="log-action">сервер перезагружен после обновления</span>
+                        </div>
+                        <div class="log-item">
+                            <span class="log-time">09:47</span>
+                            <span class="log-user">HumidGolf</span>
+                            <span class="log-action">добавил нового пользователя <strong>vova</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="team-tab">
+                    <div class="team-management">
+                        <h3>Редактирование состава команды</h3>
+                        <p>Здесь можно назначать роли и статусы членов команды</p>
+                        <div class="team-member-editor">
+                            <div class="form-group">
+                                <label class="form-label">Выберите пользователя</label>
+                                <select class="form-input" id="team-member-select">
+                                    <option value="">-- Выберите пользователя --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Роль в команде</label>
+                                <select class="form-input" id="member-role">
+                                    <option value="developer">Разработчик</option>
+                                    <option value="lead_dev">Главный Разработчик</option>
+                                    <option value="coder">Кодер</option>
+                                    <option value="lead_coder">Главный Кодер</option>
+                                    <option value="sponsor">Спонсор</option>
+                                    <option value="designer">Дизайнер</option>
+                                    <option value="tester">Тестировщик</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Статус</label>
+                                <select class="form-input" id="member-status">
+                                    <option value="active">Активен</option>
+                                    <option value="busy">Занят</option>
+                                    <option value="away">Отсутствует</option>
+                                    <option value="vacation">В отпуске</option>
+                                </select>
+                            </div>
+                            <button class="form-submit button-glow">Обновить данные</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Библиотеки и скрипты -->
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0/dist/umd/supabase.min.js"></script>
+    <!-- Three.js для 3D лого -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <!-- Chart.js для статистики -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Основные скрипты -->
+    <script src="js/supabase.js"></script>
+    <script src="js/ui-effects.js"></script>
+    <script src="js/team-interactions.js"></script>
+    <script src="js/admin-panel.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
