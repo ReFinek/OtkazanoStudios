@@ -1,0 +1,389 @@
+/* Стили для команды */
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.team-member {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 25px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.team-member::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 0%, rgba(0, 255, 0, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.team-member:hover::before {
+    opacity: 1;
+}
+
+.team-member:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 255, 0, 0.3);
+    z-index: 10;
+}
+
+.team-member.active {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 255, 0, 0.4);
+}
+
+/* Роли участников */
+/* Главный разработчик */
+.team-member.role-lead-dev {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                conic-gradient(from 0deg, #ffaa00, #ff00aa, #00aaff, #ffaa00) border-box;
+}
+
+.team-member.role-lead-dev .member-badge {
+    background: linear-gradient(45deg, #ffaa00, #ff5500);
+    color: black;
+}
+
+/* Главный кодер */
+.team-member.role-lead-coder {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                conic-gradient(from 0deg, #00aaff, #00ffaa, #00aaff, #00ffaa) border-box;
+}
+
+.team-member.role-lead-coder .member-badge {
+    background: linear-gradient(45deg, #00aaff, #0055ff);
+    color: white;
+}
+
+/* Спонсор */
+.team-member.role-sponsor {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                conic-gradient(from 0deg, #00ffaa, #aaff00, #00ffaa, #aaff00) border-box;
+}
+
+.team-member.role-sponsor .member-badge {
+    background: linear-gradient(45deg, #00ffaa, #00aa55);
+    color: black;
+}
+
+/* Кодер */
+.team-member.role-coder {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                conic-gradient(from 0deg, #aa00ff, #ff00aa, #aa00ff, #ff00aa) border-box;
+}
+
+.team-member.role-coder .member-badge {
+    background: linear-gradient(45deg, #aa00ff, #5500aa);
+    color: white;
+}
+
+.member-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    border: 3px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    transition: var(--transition);
+}
+
+.team-member:hover .member-avatar {
+    transform: scale(1.1) rotate(5deg);
+    border-color: var(--primary-color);
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.member-avatar-placeholder {
+    font-size: 3rem;
+    color: var(--text-tertiary);
+    font-weight: bold;
+}
+
+.member-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 5;
+    animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(0, 255, 0, 0); }
+}
+
+.member-info {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.member-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    position: relative;
+    display: inline-block;
+}
+
+.member-name::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--primary-color);
+    opacity: 0.7;
+}
+
+.team-member.role-lead-dev .member-name::after {
+    background: linear-gradient(90deg, #ffaa00, #ff00aa);
+}
+
+.team-member.role-lead-coder .member-name::after {
+    background: linear-gradient(90deg, #00aaff, #00ffaa);
+}
+
+.team-member.role-sponsor .member-name::after {
+    background: linear-gradient(90deg, #00ffaa, #aaff00);
+}
+
+.team-member.role-coder .member-name::after {
+    background: linear-gradient(90deg, #aa00ff, #ff00aa);
+}
+
+.member-role {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.member-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.status-online {
+    background: rgba(0, 255, 0, 0.2);
+    color: #0f0;
+    border: 1px solid #0f0;
+}
+
+.status-busy {
+    background: rgba(255, 170, 0, 0.2);
+    color: #ffaa00;
+    border: 1px solid #ffaa00;
+}
+
+.status-away {
+    background: rgba(255, 0, 255, 0.2);
+    color: #ff00ff;
+    border: 1px solid #ff00ff;
+}
+
+.status-offline {
+    background: rgba(255, 85, 85, 0.2);
+    color: #f55;
+    border: 1px solid #f55;
+}
+
+.member-description {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-top: 15px;
+    font-size: 1.05rem;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.team-member.active .member-description {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+/* Достижения участника */
+.member-achievements {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.achievement-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    position: relative;
+    cursor: help;
+}
+
+.achievement-badge::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 10, 10, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.achievement-badge:hover::after {
+    opacity: 1;
+    visibility: visible;
+    bottom: calc(100% + 8px);
+}
+
+/* Social links */
+.member-socials {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.social-icon:hover {
+    background: var(--primary-color);
+    color: black;
+    transform: translateY(-3px);
+}
+
+/* Анимация появления при скролле */
+.team-member.animate {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .member-avatar {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .member-name {
+        font-size: 1.4rem;
+    }
+    
+    .member-role {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .member-avatar {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .member-name {
+        font-size: 1.2rem;
+    }
+    
+    .member-role {
+        font-size: 0.9rem;
+    }
+    
+    .member-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+    }
+}
